@@ -10,6 +10,7 @@
  * License: GPL2
  */
 
+require('gluu_openid_sso_settings_page.php');
 
 class gluu_OpenID_SSO {
 
@@ -141,6 +142,13 @@ class gluu_OpenID_SSO {
 	private function oxd_openid_show_error_message() {
 		remove_action( 'admin_notices', array( $this, 'oxd_openid_error_message') );
 		add_action( 'admin_notices', array( $this, 'oxd_openid_success_message') );
+	}
+
+	function gluu_openid_menu() {
+
+		//Add gluu plugin to the menu
+		$page = add_menu_page( 'Gluu OpenID Settings ' . __( 'Configure OpenID', 'oxd_openid_settings' ), 'Gluu oxd login', 'administrator',
+				'oxd_openid_settings', array( $this, 'oxd_login_widget_openid_options' ),plugin_dir_url(__FILE__) . 'includes/images/gluu_icon.png');
 	}
 
 	
