@@ -699,6 +699,75 @@ function oxd_openid_login_config_info(){ ?>
 
 		</div>
 <?php }
+function oxd_openid_shortcode_info(){
+?>
+	<div class="oxd_openid_table_layout">
+
+	<?php if(!is_oxd_registered()) { ?>
+		<div style="font-weight:bold ;display:block;margin-top:10px;color:red;background-color:rgba(251, 232, 0, 0.15);padding:5px;border:solid 1px rgba(255, 0, 9, 0.36);">
+		Please enter gluu and oxd configuration for continue.
+		</div>
+	<?php } ?>
+
+								<table>
+									<tr>
+										<td colspan="2">
+											<h3>Shortcode</h3>
+											<p>If any section is not opening, press CTRL + F5 to clear cache.<p>
+
+										</td>
+
+									</tr>
+
+									<tr>
+										<td>
+											<h3><a id="openid_login_shortcode_title"  aria-expanded="false" >Social Login Shortcode</a></h3>
+
+											<div hidden="" id="openid_login_shortcode" style="font-size:13px !important">
+											Use social login Shortcode in the content of required page/post where you want to display Social Login Icons.<br>
+											<b>Example:</b> <code>[gluu_social_login]</code>
+
+											<h4 style="margin-bottom:0 !important">For Icons</h4>
+											You can use  different attribute to customize social login icons. All attributes are optional.<br>
+											<b>Example:</b> <code>[gluu_social_login  shape="square" theme="default" space="4" size="35"]</code><br>
+
+											<h4 style="margin-bottom:0 !important">For Long-Buttons</h4>
+											You can use different attribute to customize social login buttons. All attributes are optional.<br>
+											<b>Example:</b> <code>[gluu_social_login  shape="longbuttonwithtext" theme="default" space="4" width="300" height="50"]</code>
+											<br>
+
+											<h4 style="margin-bottom:0 !important">Available values for attributes</h4>
+											<b>shape</b>: round, roundededges, square, longbuttonwithtext<br>
+											<b>theme</b>: default, custombackground<br>
+											<b>size</b>: Any value between 20 to 100<br>
+											<b>space</b>: Any value between 0 to 100<br>
+											<b>width</b>: Any value between 200 to 1000<br>
+											<b>height</b>: Any value between 35 to 50<br></div>
+											<hr>
+										</td>
+									</tr>
+
+
+									<tr>
+										<td>
+											<h3><a id="openid_shortcode_inphp_title">Shortcode in php file</a></h3>
+											<div hidden="" id = "openid_shortcode_inphp" style="font-size:13px !important">
+											You can use shortcode in PHP file as following: &nbsp;&nbsp;
+											&nbsp;
+											<code>&lt;&#63;php echo do_shortcode(‘SHORTCODE’) /&#63;&gt;</code>
+											<br>
+											Replace SHORTCODE in above code with the required shortcode like [gluu_social_login theme="default"], so the final code looks like following :
+											<br>
+											<code>&lt;&#63;php echo do_shortcode('[gluu_social_login theme="default"]') &#63;&gt;</code></div>
+											<hr>
+
+										</td>
+									</tr>
+
+								</table>
+	</div>
+<?php
+}
 
 
 
