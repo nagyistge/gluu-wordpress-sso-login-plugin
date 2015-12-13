@@ -768,7 +768,130 @@ function oxd_openid_shortcode_info(){
 	</div>
 <?php
 }
+function oxd_openid_troubleshoot_info(){ ?>
+	<div class="oxd_openid_table_layout">
 
+	<?php if(!is_oxd_registered()) { ?>
+		<div style="font-weight:bold ;display:block;margin-top:10px;color:red;background-color:rgba(251, 232, 0, 0.15);padding:5px;border:solid 1px rgba(255, 0, 9, 0.36);">
+		Please enter gluu and oxd configuration for continue.
+		</div>
+	<?php } ?>
+				<table width="100%">
+		<tbody>
+		 <tr><td>
+		 <p>If any section is not opening, press CTRL + F5 to clear cache.<p>
+
+					<h3><a  id="openid_question_curl" class="oxd_openid_title_panel" >cURL</a></h3>
+					<div class="oxd_openid_help_desc" hidden="" id="openid_question_curl_desc">
+
+					<h4><a  id="openid_question1"  >How to enable PHP cURL extension? (Pre-requisite)</a></h4>
+					<div  id="openid_question1_desc">
+					cURL is enabled by default but in case you have disabled it, follow the steps to enable it
+					<ol>
+						<li>Open php.ini(it's usually in /etc/ or in php folder on the server).</li>
+						<li>Search for extension=php_curl.dll. Uncomment it by removing the semi-colon( ; ) in front of it.</li>
+						<li>Restart the Apache Server.</li>
+						</ol>
+						For any further queries, please submit a query on right hand side in our <b>Support Section</b>.
+
+					</div>
+						<hr>
+
+					<h4><a  id="openid_question9"  >I am getting error - curl_setopt(): CURLOPT_FOLLOWLOCATION cannot be activated when an open_basedir is set</a></h4>
+					<div   id="openid_question9_desc">
+						Just setsafe_mode = Off in your php.ini file (it's usually in /etc/ on the server). If that's already off, then look around for the open_basedir in the php.ini file, and change it to open_basedir = .
+					</div>
+
+
+		</div>
+		<hr>
+		</td></tr>
+
+		 <tr><td>
+				<h3><a  id="openid_question_otp" class="oxd_openid_title_panel" >OTP and Forgot Password</a></h3>
+				  <div class="oxd_openid_help_desc" hidden="" id="openid_question_otp_desc">
+					<h4><a  id="openid_question7"  >I did not recieve OTP. What should I do?</a></h4>
+					<div  id="openid_question7_desc">
+						The OTP is sent as an email to your email address with which you have registered with gluu. If you can't see the email from gluu in your mails, please make sure to check your SPAM folder. <br/><br/>If you don't see an email even in SPAM folder, please verify your account using your mobile number. You will get an OTP on your mobile number which you need to enter on the page. If none of the above works, please contact us using the Support form on the right.
+					</div>
+					<hr>
+
+					<h4><a  id="openid_question8"  >After entering OTP, I get Invalid OTP. What should I do?</a></h4>
+					<div  id="openid_question8_desc">
+						Use the <b>Resend OTP</b> option to get an additional OTP. Plese make sure you did not enter the first OTP you recieved if you selected <b>Resend OTP</b> option to get an additional OTP. Enter the latest OTP since the previous ones expire once you click on Resend OTP. <br/><br/>If OTP sent on your email address are not working, please verify your account using your mobile number. You will get an OTP on your mobile number which you need to enter on the page. If none of the above works, please contact us using the Support form on the right.
+					</div>
+					<hr>
+
+					<h4><a  id="openid_question5" >I forgot the password of my gluu account. How can I reset it?</a></h4>
+					<div  id="openid_question5_desc">
+						There are two cases according to the page you see -<br><br/>
+						1. <b>Login with gluu</b> screen: You should click on <b>forgot password</b> link. You will get your new password on your email address which you have registered with gluu . Now you can login with the new password.<br><br/>
+						2. <b>Register with gluu</b> screen: Enter your email ID and any random password in <b>password</b> and <b>confirm password</b> input box. This will redirect you to <b>Login with gluu</b> screen. Now follow first step.
+					</div>
+
+				</div>
+				<hr>
+		</td></tr>
+
+
+				<tr><td>
+					<h3><a  id="openid_question_login" class="oxd_openid_title_panel" >Social Login</a></h3>
+					<div class="oxd_openid_help_desc" hidden="" id="openid_question_login_desc">
+					<h4><a  id="openid_question2"  >How to add login icons to frontend login page?</a></h4>
+					<div   id="openid_question2_desc">
+					You can add social login icons to frontend login page using our shortcode [gluu_social_login]. Refer to 'Shortcode' tab to add customizations to Shortcode.
+
+
+					</div>
+					<hr>
+
+					<h4><a  id="openid_question4"  >How can I put social login icons on a page without using widgets?</a></h4>
+					<div  id="openid_question4_desc">
+					You can add social login icons to any page or custom login page using 'social login shortcode' [gluu_social_login]. Refer to 'Shortcode' tab to add customizations to Shortcode.
+					</div>
+					<hr>
+
+					<h4><a  id="openid_question12" >Social Login icons are not added to login/registration form.</a></h4>
+					<div  id="openid_question12_desc">
+					Your login/registration form may not be wordpress's default login/registration form. In this case you can add social login icons to custom login/registration form using 'social login shortcode' [gluu_social_login]. Refer to 'Shortcode' tab to add customizations to Shortcode.
+					</div>
+					<hr>
+					<h4><a  id="openid_question3"  >How can I redirect to my blog page after login?</a></h4>
+					<div  id="openid_question3_desc">
+					You can select one of the options from <b>Redirect URL after login</b> of <b>Display Option</b> section under <b>Social Login</b> tab. <br>
+					1. Same page where user logged in <br>
+					2. Homepage <br>
+					3. Account Dsahboard <br>
+					4. Custom URL - Example: https://www.example.com <br>
+					</div>
+
+				</div>
+					<hr>
+		</td></tr>
+
+
+
+		<tr><td>
+			<h3><a  id="openid_question_logout" class="oxd_openid_title_panel" >Logout Redirection</a></h3>
+					<div class="oxd_openid_help_desc" hidden="" id="openid_question_logout_desc">
+					<h4><a  id="openid_question11"  >After logout I am redirected to blank page</a></h4>
+					<div  id="openid_question11_desc">
+					Your theme and Social Login plugin may conflict during logout. To resolve it you need to uncheck <b>Enable Logout Redirection</b> checkbox under <b>Display Option</b> of <b>Social Login</b> tab.
+					</div>
+				</div>
+					<hr>
+		</td></tr>
+
+
+
+
+		</tbody>
+		</table>
+	</div>
+
+
+<?php
+}
 
 
 
