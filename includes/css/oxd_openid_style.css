@@ -1,135 +1,139 @@
- .mo_openid_help_title {
+.oxd_openid_help_title {
 	font-size:13px;
 	width:100%;
 	color:#1B79AE;
 	cursor:pointer;
 	font-weight: bold;
 }
-.mo_openid_help_desc {
+.oxd_openid_help_desc {
 	font-size:13px;
 	border-left:solid 2px rgba(128, 128, 128, 0.65);
 	margin-top:10px;
 	padding-left:10px;
 }
- .mo_openid_support_layout{
-       width: 93%;
-       background-color:#FFFFFF; 
-       border:1px solid #CCCCCC; 
-       padding-left:20px; 
-       height:409px;
-       
+.oxd_openid_support_layout{
+	width: 93%;
+	background-color:#FFFFFF;
+	border:1px solid #CCCCCC;
+	padding-left:20px;
+	height:409px;
+
 }
-.mo_openid_table_layout {
-	background-color:#FFFFFF; 
-	border:1px solid #CCCCCC; 
+.oxd_openid_table_layout {
+	background-color:#FFFFFF;
+	border:2px solid #53cc6b;
 	padding:0px 10px 10px 10px;
 	margin-bottom: 10px;
 	height:auto;
 	min-height:400px;
 }
 
-.mo_openid_table_layout input['type=text'] {
-	width: 80%;
+.nav-tab{
+	background-color: #66dade;
+	border:3px solid #53cc6b;
 }
-
-.mo_opneid_table_td_checkbox {
+.nav-tab-active{
+	background-color: #53cc6b;
+	border:3px solid #66dade;
+}
+.oxd_opneid_table_td_checkbox {
 	padding-left: 10px;
 }
-.mo_openid_table_textbox {
+.oxd_openid_table_textbox {
 	width:80%;
 }
-.mo_openid_table_contact {
+.oxd_openid_table_contact {
 	width:95%;
 }
-.mo_openid_settings_table,.mo_openid_display_table {
+.oxd_openid_settings_table,.oxd_openid_display_table {
 	width: 100%;
 }
-.mo_openid_settings_table tr td:first-child {
+.oxd_openid_settings_table tr td:first-child {
 	width: 30%;
 }
 
-.mo_openid_display_table tr td:first-child{
+.oxd_openid_display_table tr td:first-child{
 	width: 50%;
 }
 
-.mo_openid_display_table .mo_openid_table_textbox {
+.oxd_openid_display_table .oxd_openid_table_textbox {
 	width:70%;
 }
-.mo_openid_login_wid li{
+.oxd_openid_login_wid li{
 	margin:5px;
 	list-style-type:none;
 }
 
-.mo-openid-app-icons>a>img{
-	width:35px !important; 
+.oxd-openid-app-icons>a>img{
+	width:35px !important;
 	height:35px !important;
 	margin:8px 0px;
 	display: inline !important;
 }
 
-.mo-openid-app-share-icons{
-width:35px !important; 
-height:35px !important;
-display:inline !important;
+.oxd-openid-app-share-icons{
+	width:35px !important;
+	height:35px !important;
+	display:inline !important;
 }
 
-.mo-openid-share-link{
-	     border-bottom: 0px !important;
-		box-sizing:border-box !important;
+.oxd-openid-share-link{
+	border-bottom: 0px !important;
+	box-sizing:border-box !important;
 }
 
 .circle{
-	
+
 	border-radius: 999px !important;
 }
 
 
 .oval{
-border-radius: 4px !important;
+	border-radius: 4px !important;
 }
 
 .round{
-	
+
 	border-radius: 999px !important;
 }
 
 
 .roundededges{
-border-radius: 4px !important;
+	border-radius: 4px !important;
 }
 
-.mo-openid-app-icons>p{
-margin:0px !important;
+.oxd-openid-app-icons>p{
+	margin:0px !important;
 
 }
 
-.mo-openid-app-icons{
+.oxd-openid-app-icons{
 	display:inline !important;
 }
 
 .theme-checkbox{
 	vertical-align :super !important;
-} 
+}
 
 a{
 	cursor:pointer;
-	
+
 }
 
-.mo_openid_display_interface{
+.oxd_openid_display_interface{
 	width:100%;
 }
 
-.mo_openid_vertical{
+.oxd_openid_vertical{
 	display:inline-block !important;
-	 overflow: visible;
-    z-index: 10000000;
-    padding: 10px;
-    border-radius: 4px;
-    opacity: 1;
-    -webkit-box-sizing: content-box!important;
-    -moz-box-sizing: content-box!important;
-    box-sizing: content-box!important;
+	overflow: visible;
+	z-index: 10000000;
+	padding: 10px;
+	border-radius: 4px;
+	opacity: 1;
+	-webkit-box-sizing: content-box!important;
+	-moz-box-sizing: content-box!important;
+	box-sizing: content-box!important;
 	width:40px;
 	position:fixed;
 }
@@ -138,69 +142,69 @@ a{
 	color:#ffffff !important;
 }
 
- .custom-login-button{
-       text-align:center !important;
-       color:white !important;
-       padding-top:8px !important;
-	   box-sizing: border-box !important;
+.custom-login-button{
+	text-align:center !important;
+	color:white !important;
+	padding-top:8px !important;
+	box-sizing: border-box !important;
 }
 
 .btn-custom-dec{
-text-decoration:none !important;	
+	text-decoration:none !important;
 }
 
-.mo-custom-share-icon{
+.oxd-custom-share-icon{
 	box-sizing:border-box !important;
 }
 
-.mo_openid_help_desc {
+.oxd_openid_help_desc {
 	font-size:13px;
 	border-left:solid 2px rgba(128, 128, 128, 0.65);
 	margin-top:10px;
 	padding-left:10px;
 }
-.mo_openid_title_panel{
+.oxd_openid_title_panel{
 	width: 100%;
-    color: #1B79AE;
-    cursor: pointer;
-    font-weight: bold;
-	}
-	
+	color: #1B79AE;
+	cursor: pointer;
+	font-weight: bold;
+}
+
 #TB_window, #TB_window #TB_ajaxContent {
 	width:500px!important;
 }
 
-.mo_openid_pricing_table{
+.oxd_openid_pricing_table{
 	text-align:center;
 	font-size: 15px !important;
 }
 
-.mo_openid_pricing_header{
+.oxd_openid_pricing_header{
 	color: #fff !important;
 	margin: 8px !important;
 }
 
-.mo_openid_pricing_sub_header{
+.oxd_openid_pricing_sub_header{
 	margin: 4px !important;
 	color: #fff !important;
 }
 
-.mo_openid_pricing_text{
+.oxd_openid_pricing_text{
 	font-size: 15px !important;
 	color: #fff !important;
 	font-weight: bold !important;
 }
 
-.mo_openid_pricing_free_tab{
+.oxd_openid_pricing_free_tab{
 	background-color: rgba(34, 153, 221, 0.82)!important;
-	//#29d
+//#29d
 }
 
-.mo_openid_pricing_paid_tab{
+.oxd_openid_pricing_paid_tab{
 	background-color: #1a71a4 !important;
 }
 
-.mo_openid_thumbnail {
+.oxd_openid_thumbnail {
 	width:250px;
 	padding: 4px;
 
@@ -214,17 +218,17 @@ text-decoration:none !important;
 	transition: border .2s ease-in-out
 }
 
-.mo_openid_msgs{
+.oxd_openid_msgs{
 	font-size: 14px !important;
 }
 
-.mo_openid_success_container{
+.oxd_openid_success_container{
 	background-color: rgba(185, 228, 155, 0.56) !important;
 	margin-left: 3px !important;
 
 }
 
-.mo_openid_error_container{
+.oxd_openid_error_container{
 	background-color: rgba(251, 102, 0, 0.29) !important;
 	margin-left: 3px !important;
 }
