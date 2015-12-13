@@ -85,7 +85,32 @@ class gluu_OpenID_SSO {
 		add_option('oxdOpenId_user_attributes','0');
 	}
 
-	
+	function oxd_custom_login_stylesheet()
+	{
+
+		wp_enqueue_style( 'oxd-wp-style',plugins_url('includes/css/oxd_openid_style.css?version=2.0', __FILE__), false );
+		wp_enqueue_style( 'oxd-wp-bootstrap-social',plugins_url('includes/css/bootstrap-social.css', __FILE__), false );
+		wp_enqueue_style( 'oxd-wp-bootstrap-main',plugins_url('includes/css/bootstrap.min.css', __FILE__), false );
+		wp_enqueue_style( 'oxd-wp-font-awesome',plugins_url('includes/css/font-awesome.min.css', __FILE__), false );
+		wp_enqueue_style( 'oxd-wp-font-awesome',plugins_url('includes/css/font-awesome.css', __FILE__), false );
+	}
+
+	function oxd_openid_plugin_settings_style() {
+		wp_enqueue_style( 'oxd_openid_admin_settings_style', plugins_url('includes/css/oxd_openid_style.css?version=2.0', __FILE__));
+		wp_enqueue_style( 'oxd_openid_admin_settings_phone_style', plugins_url('includes/css/phone.css', __FILE__));
+		wp_enqueue_style( 'oxd-wp-bootstrap-social',plugins_url('includes/css/bootstrap-social.css', __FILE__), false );
+		wp_enqueue_style( 'oxd-wp-bootstrap-main',plugins_url('includes/css/bootstrap.min-preview.css', __FILE__), false );
+		wp_enqueue_style( 'oxd-wp-font-awesome',plugins_url('includes/css/font-awesome.min.css', __FILE__), false );
+		wp_enqueue_style( 'oxd-wp-font-awesome',plugins_url('includes/css/font-awesome.css', __FILE__), false );
+	}
+
+	function oxd_openid_plugin_settings_script() {
+		wp_enqueue_script( 'oxd_openid_admin_settings_phone_script', plugins_url('includes/js/phone.js', __FILE__ ));
+		wp_enqueue_script( 'oxd_openid_admin_settings_color_script', plugins_url('includes/jscolor/jscolor.js', __FILE__ ));
+		wp_enqueue_script( 'oxd_openid_admin_settings_script', plugins_url('includes/js/settings.js', __FILE__ ), array('jquery'));
+		wp_enqueue_script( 'oxd_openid_admin_settings_phone_script', plugins_url('includes/js/bootstrap.min.js', __FILE__ ));
+	}
+
 }
 
 new gluu_OpenID_SSO;
