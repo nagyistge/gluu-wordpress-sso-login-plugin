@@ -5,7 +5,7 @@
  * Plugin URI: http://gluu.com
  * Description: Allow your users to login with Facebook, Google, Mobile, U2F Token etc using customizable buttons.
  * Version: 1.0
- * Author: gluu
+ * Author: Vlad Karapetyan
  * Author URI: http://gluu.com
  * License: GPL2
  */
@@ -204,6 +204,11 @@ class gluu_OpenID_SSO {
 				update_option( 'oxd_openid_message', 'All the fields are required. Please enter valid entries.');
 				$this->oxd_openid_show_error_message();
 				return;
+			}else if( !$_POST['users_can_register']){
+
+				update_option( 'oxd_openid_message', 'Need to choose anyone can register checkbox.');
+				$this->oxd_openid_show_error_message();
+				return;
 			} else if( (int)$_POST['oxd_host_port']  > 65535 && (int)$_POST['oxd_host_port']  < 0){
 
 				update_option( 'oxd_openid_message', 'Enter your oxd host port (Min. number 0, Max. number 65535)');
@@ -227,7 +232,8 @@ class gluu_OpenID_SSO {
 				$oxd_host_ip = $_POST['oxd_host_ip'];
 				$gluu_server_url = $_POST['gluu_server_url'];
 			}
-
+			update_option( 'users_can_register', $_POST['users_can_register'] );
+			update_option( 'default_role', $_POST['default_role'] );
 			update_option( 'oxd_openid_admin_email', $email );
 			update_option( 'oxd_openid_oxd_ip', $oxd_host_ip );
 			update_option( 'oxd_openid_oxd_port', $oxd_host_port );
