@@ -537,6 +537,168 @@ function oxd_openid_apps_config() {
 
 <?php
 }
+function oxd_openid_login_config_info(){ ?>
+		<div class="oxd_openid_table_layout">
+		<?php
+		 $options = get_option('oxd_config');
+		 if(!is_oxd_registered()) { ?>
+										<div style="font-weight:bold ;display:block;margin-top:10px;color:red;background-color:rgba(251, 232, 0, 0.15);padding:5px;border:solid 1px rgba(255, 0, 9, 0.36);">
+		Please enter gluu and oxd configuration for continue.
+		</div>
+									<?php } ?>
+			        <div>
+            <h1>Oxd server config</h1>
+            <p class="description"><?php _e('<a target="_blank" href="https://gluu.org">For more information click me.</a>'); ?></p>
+            <form action="" method="post">
+                <table class="form-table">
+                    <tbody>
+<!--                    --><?php /*if(esc_attr($options['gluu_server_url'])):*/?>
+                        <tr>
+                            <th scope="row">
+                                <a target="_blank" style="margin-right: 30px" href="<?php echo esc_attr($options['gluu_server_url']); ?>/oxauth/login">Login</a>
+                            </th>
+                            <td>
+                                <a target="_blank" href="<?php echo esc_attr($options['gluu_server_url']); ?>/identity/register">Register Now!</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">
+                                Your email
+                            </th>
+                            <td>
+                                <input <?php if(!is_oxd_registered()) echo 'disabled'?> type="email" placeholder="Please enter email ." name="customer_email" value="<?php echo get_option('oxd_openid_admin_email'); ?>" size="100%">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">
+                                Migrate Existing Users
+                            </th>
+                            <td>
+                                <?php if (!esc_attr($options['migrate_users'])): ?>
+                                    <select <?php if(!is_oxd_registered()) echo 'disabled'?> name="migrate_users">
+                                        <option <?php if (esc_attr($options['migrate_users']) == "No") {echo "selected='selected'";} ?> value="No">No</option>
+                                        <option <?php if (esc_attr($options['migrate_users']) == "Yes") { echo "selected='selected'"; } ?> value="Yes">Yes</option>
+                                    </select>
+                                <?php else: ?>
+                                    <input <?php if(!is_oxd_registered()) echo 'disabled'?> type="submit" name="submit" value="Remove migrated users..." class="button button-primary">
+                                <?php endif; ?>
+                            </td>
+                        </tr>
+                       <!-- <?php /* else:*/?>
+                        <p style="color:red">Enter gluu server...</p>
+                        --><?php /* endif;*/?>
+                        <tr>
+                            <th scope="row">
+                                Host ip
+                            </th>
+                            <td>
+                                <input <?php if(!is_oxd_registered()) echo 'disabled'?> type="text" placeholder="Please enter oxd host ip address (for example 127.0.0.1) ." name="oxd_host_ip" value="<?php echo esc_attr($options['oxd_host_ip']); ?>" size="100%">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">
+                                Port number
+                            </th>
+                            <td>
+                                <input <?php if(!is_oxd_registered()) echo 'disabled'?> type="text" placeholder="Please enter oxd open port (for example 8099)." name="oxd_host_port" value="<?php echo esc_attr($options['oxd_host_port']); ?>" size="100%">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">
+                                Gluu Server Url
+                            </th>
+                            <td>
+                                <input <?php if(!is_oxd_registered()) echo 'disabled'?> type="text" placeholder="Please enter gluu server url (for example https://ce-dev.gluu.org) ." name="gluu_server_url" value="<?php echo esc_attr($options['gluu_server_url']); ?>" size="100%" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">
+                                User ID
+                            </th>
+                            <td>
+                                <input <?php if(!is_oxd_registered()) echo 'disabled'?> type="text" placeholder="Please enter user ID."
+                                       name="user_id"
+                                       value="<?php echo esc_attr($options['user_id']); ?>" size="100%">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">
+                                User Secret
+                            </th>
+                            <td>
+                                <input <?php if(!is_oxd_registered()) echo 'disabled'?> type="text" placeholder="Please enter user secret."
+                                       name="user_secret"
+                                       value="<?php echo esc_attr($options['user_secret']); ?>" size="100%">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">
+                                Client Redirect URL
+                            </th>
+                            <td>
+                                <input <?php if(!is_oxd_registered()) echo 'disabled'?> type="text" placeholder="Please enter client redirect url."
+                                       name="authorization_redirect_uri"
+                                       value="<?php echo esc_attr($options['authorization_redirect_uri']); ?>" size="100%">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">
+                                Logout Redirect Url
+                            </th>
+                            <td>
+                                <input <?php if(!is_oxd_registered()) echo 'disabled'?> type="text" placeholder="Please enter logout redirect url."
+                                       name="logout_redirect_uri"
+                                       value="<?php echo esc_attr($options['logout_redirect_uri']); ?>" size="100%">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">
+                                Application Type
+                            </th>
+                            <td>
+                                <select <?php if(!is_oxd_registered()) echo 'disabled'?> name="application_type" id="application_type">
+                                    <option <?php if(esc_attr($options['application_type']) == "web"){ echo "selected='selected'";} ?> value="web">Web</option>
+                                    <option <?php if(esc_attr($options['application_type']) == "native"){ echo "selected='selected'";} ?>  value="native">Native</option>
+                                </select>
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">
+                                Grant Types
+                            </th>
+                            <td>
+                                <input <?php if(!is_oxd_registered()) echo 'disabled'?> type="text" placeholder="Please enter grant types (for example authorization_code)."
+                                       name="grant_types"
+                                       value="<?php echo esc_attr($options['grant_types']); ?>" size="100%">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">
+                                Response Types
+                            </th>
+                            <td>
+                                <div >
+                                    <div>
+                                        <input <?php if(!is_oxd_registered()) echo 'disabled'?> type="checkbox" name="response_types[]" <?php if($options && in_array("code", $options['response_types'])){ echo "checked";} ?> id="code" value="code">
+                                        <label  for="code">Code</label>
+                                        <input <?php if(!is_oxd_registered()) echo 'disabled'?> type="checkbox" name="response_types[]" <?php if($options && in_array("id_token", $options['response_types'])){ echo "checked";} ?> id="id_token" value="id_token">
+                                        <label  for="id_token">Id_Token</label>
+                                        <input <?php if(!is_oxd_registered()) echo 'disabled'?> type="checkbox" name="response_types[]" <?php if($options && in_array("token", $options['response_types'])){ echo "checked";} ?> id="token" value="token">
+                                        <label  for="token">Token</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+                <input type="submit" class="button button-primary button-large" <?php if(!is_oxd_registered()) echo 'disabled'?> value="set_oxd_config" name="set_oxd_config" />
+            </form>
+        </div>
+
+		</div>
+<?php }
 
 
 
