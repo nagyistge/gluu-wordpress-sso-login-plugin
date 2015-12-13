@@ -111,6 +111,39 @@ class gluu_OpenID_SSO {
 		wp_enqueue_script( 'oxd_openid_admin_settings_phone_script', plugins_url('includes/js/bootstrap.min.js', __FILE__ ));
 	}
 
+	function oxd_openid_success_message() {
+		$message = get_option('oxd_openid_message'); ?>
+
+		<script>
+
+			jQuery(document).ready(function() {
+				var message = "<?php echo $message; ?>";
+				jQuery('#oxd_openid_msgs').append("<div class='error notice is-dismissible oxd_openid_error_container'> <p class='oxd_openid_msgs'>" + message + "</p></div>");
+			});
+		</script>
+	<?php }
+
+	function oxd_openid_error_message() {
+		$message = get_option('oxd_openid_message'); ?>
+		<script>
+			jQuery(document).ready(function() {
+				var message = "<?php echo $message; ?>";
+				jQuery('#oxd_openid_msgs').append("<div class='updated notice is-dismissible oxd_openid_success_container'> <p class='oxd_openid_msgs'>" + message + "</p></div>");
+			});
+		</script>
+	<?php }
+
+	private function oxd_openid_show_success_message() {
+		remove_action( 'admin_notices', array( $this, 'oxd_openid_success_message') );
+		add_action( 'admin_notices', array( $this, 'oxd_openid_error_message') );
+	}
+
+	private function oxd_openid_show_error_message() {
+		remove_action( 'admin_notices', array( $this, 'oxd_openid_error_message') );
+		add_action( 'admin_notices', array( $this, 'oxd_openid_success_message') );
+	}
+
+	
 }
 
 new gluu_OpenID_SSO;
