@@ -3,7 +3,7 @@
 /**
  * Plugin Name: Gluu oxd login to gluu server
  * Plugin URI: http://gluu.com
- * Description: Allow your users to login with Facebook, Google, Mobile, U2F Token etc using customizable buttons.
+ * Description: Allow your users to login with Facebook, LinkedIn, Twitter, Google, Basic, U2F Token etc using customizable buttons.
  * Version: 1.0
  * Author: Vlad Karapetyan
  * Author URI: http://gluu.com
@@ -34,29 +34,29 @@ class gluu_OpenID_SSO {
 
 		// add social login icons to default login form
 		if(get_option('oxd_openid_default_login_enable') == 1){
-			add_action( 'login_form', array($this, 'oxd_openid_add_social_login') );
+			add_action( 'login_form', array($this, 'oxd_openid_add_gluu_login') );
 			add_action( 'login_enqueue_scripts', array( $this, 'oxd_custom_login_stylesheet' ) );
 		}
 
 		// add social login icons to default registration form
 		if(get_option('oxd_openid_default_register_enable') == 1){
 
-			add_action( 'register_form', array($this, 'oxd_openid_add_social_login') );
+			add_action( 'register_form', array($this, 'oxd_openid_add_gluu_login') );
 
 		}
 
 		//add shortcode
-		add_shortcode( 'gluu_social_login', array($this, 'oxd_get_output') );
+		add_shortcode( 'gluu_login', array($this, 'oxd_get_output') );
 
 		// add social login icons to comment form
 		if(get_option('oxd_openid_default_comment_enable') == 1 ){
-			add_action('comment_form_must_log_in_after', array($this, 'oxd_openid_add_social_login'));
-			add_action('comment_form_top', array($this, 'oxd_openid_add_social_login'));
+			add_action('comment_form_must_log_in_after', array($this, 'oxd_openid_add_gluu_login'));
+			add_action('comment_form_top', array($this, 'oxd_openid_add_gluu_login'));
 		}
 
 		//add social login to woocommerce
 		if(get_option('oxd_openid_woocommerce_login_form') == 1){
-			add_action( 'woocommerce_login_form', array($this, 'oxd_openid_add_social_login'));
+			add_action( 'woocommerce_login_form', array($this, 'oxd_openid_add_gluu_login'));
 		}
 
 		if(get_option('oxd_openid_logout_redirection_enable') == 0){
@@ -64,28 +64,28 @@ class gluu_OpenID_SSO {
 		}
 
 		//custom avatar
-		add_filter( 'get_avatar', array( $this, 'oxd_social_login_custom_avatar' ), 10, 5 );
+		add_filter( 'get_avatar', array( $this, 'oxd_gluu_login_custom_avatar' ), 10, 5 );
 
 		remove_action( 'admin_notices', array( $this, 'oxd_openid_success_message') );
 		remove_action( 'admin_notices', array( $this, 'oxd_openid_error_message') );
 
 		//set default values
 		add_option( 'oxd_openid_login_redirect', 'same' );
-		add_option( 'oxd_openid_login_theme', 'longbutton' );
+		add_option( 'oxd_openid_login_theme', 'circle' );
 		add_option( 'oxd_openid_default_login_enable', '1');
 		add_option( 'oxd_openid_login_widget_customize_text', 'Connect with:' );
 		add_option( 'oxd_openid_login_button_customize_text', 'Login with' );
-		add_option('oxd_login_icon_custom_size','35');
-		add_option('oxd_login_icon_space','4');
-		add_option('oxd_login_icon_custom_width','200');
-		add_option('oxd_login_icon_custom_height','35');
+		add_option( 'oxd_login_icon_custom_size','40');
+		add_option( 'oxd_login_icon_space','5');
+		add_option( 'oxd_login_icon_custom_width','200');
+		add_option( 'oxd_login_icon_custom_height','40');
 		add_option( 'oxd_openid_login_custom_theme', 'default' );
 		add_option( 'oxd_login_icon_custom_color', '2B41FF' );
 		add_option( 'oxd_openid_logout_redirection_enable', '0' );
 		add_option( 'oxd_openid_logout_redirect', 'currentpage' );
 		add_option( 'oxd_openid_auto_register_enable', '1');
 		add_option( 'oxd_openid_register_disabled_message', 'Registration is disabled for this website. Please contact the administrator for any queries.' );
-		add_option('oxdOpenId_social_login_avatar','1');
+		add_option('oxdOpenId_gluu_login_avatar','1');
 		add_option('oxdOpenId_user_attributes','0');
 	}
 
@@ -100,7 +100,7 @@ class gluu_OpenID_SSO {
 	}
 
 
-	function oxd_openid_add_social_login(){
+	function oxd_openid_add_gluu_login(){
 
 		if(!is_user_logged_in() && is_oxd_registered()){
 			$oxd_login_widget = new oxd_openid_login_wid();
@@ -196,7 +196,7 @@ class gluu_OpenID_SSO {
 			update_option('oxd_openid_message','Go to plugin <b><a href="admin.php?page=oxd_openid_settings&tab=login">settings</a></b> to enable login by gluu.');
 			add_action('admin_notices', array($this, 'oxd_openid_activation_message'));
 		}
-		if( isset( $_POST['option'] ) and $_POST['option'] == "oxd_openid_connect_register_customer" ) {	//register the admin to gluu
+		if( isset( $_POST['option'] ) and $_POST['option'] == "oxd_openid_connect_register_site_oxd" ) {	//register the admin to gluu
 
 			$illegal = "#$%^*()+=[]';,/{}|:<>?~";
 			$illegal = $illegal . '"';
@@ -209,7 +209,12 @@ class gluu_OpenID_SSO {
 				update_option( 'oxd_openid_message', 'Need to choose anyone can register checkbox.');
 				$this->oxd_openid_show_error_message();
 				return;
-			} else if( (int)$_POST['oxd_host_port']  > 65535 && (int)$_POST['oxd_host_port']  < 0){
+			} else if( !$_POST['app_type']){
+
+				update_option( 'oxd_openid_message', 'Application type can not be empty.');
+				$this->oxd_openid_show_error_message();
+				return;
+			}else if( (int)$_POST['oxd_host_port']  > 65535 && (int)$_POST['oxd_host_port']  < 0){
 
 				update_option( 'oxd_openid_message', 'Enter your oxd host port (Min. number 0, Max. number 65535)');
 				$this->oxd_openid_show_error_message();
@@ -243,17 +248,15 @@ class gluu_OpenID_SSO {
 					"oxd_host_ip" => $oxd_host_ip,
 					"oxd_host_port" =>$oxd_host_port,
 					"gluu_server_url" =>$gluu_server_url,
-					"authorization_redirect_uri" => home_url().'/wp-login.php',
+					"authorization_redirect_uri" => home_url().'/wp-login.php?option=oxdOpenId&',
 					"logout_redirect_uri" => wp_logout_url(),
 					"scope" => [ "openid", "profile" ],
 					"application_type" => "web",
-					"redirect_uris" => [ home_url().'/wp-login.php' ],
+					"redirect_uris" => [ home_url().'/wp-login.php?option=oxdOpenId&' ],
 					"response_types" => ["code"],
 					"grant_types" =>"authorization_code",
-					"acr_values" => ["gplus" ],
+					"acr_values" => [],
 					"am_host" =>"",
-					"http_method" =>"DELETE",
-					"login_type"=>[ "" ],
 					"migrate_users"=>''
 			);
 			update_option( 'oxd_config', $config_option );
@@ -265,6 +268,7 @@ class gluu_OpenID_SSO {
 			$register_site->setRequestRedirectUris($config_option['redirect_uris']);
 			$register_site->setRequestLogoutRedirectUri($config_option['logout_redirect_uri']);
 			$register_site->setRequestContacts([$email]);
+			$register_site->setRequestApplicationType($_POST['app_type']);
 
 			$register_site->setRequestClientJwksUri("");
 			$register_site->setRequestClientRequestUris([]);
@@ -286,12 +290,28 @@ class gluu_OpenID_SSO {
 
 
 		}
+		else if( isset( $_POST['option'] ) and $_POST['option'] == "oxd_openid_config_info_hidden" ) {
+			if(is_oxd_registered()) {
+				$oxd_config = !empty(get_option('oxd_config'))? get_option('oxd_config') : array();
+				$oxd_config['response_types'] = !empty($_POST['response_types']) && isset($_POST['response_types'])? $_POST['response_types'] : $oxd_config['response_types'];
+				$oxd_config['scope'] = !empty($_POST['scope']) && isset($_POST['scope'])? $_POST['scope'] : $oxd_config['scope'];
+
+				update_option('oxd_config', $oxd_config );
+				update_option( 'oxd_openid_message', 'Your settings are saved successfully.' );
+				$this->oxd_openid_show_success_message();
+			}else {
+				update_option('oxd_openid_message', 'Please register an account before trying to enable any app');
+				$this->oxd_openid_show_error_message();
+			}
+		}
 		else if( isset( $_POST['option'] ) and $_POST['option'] == "oxd_openid_enable_apps" ) {
 			if(is_oxd_registered()) {
 				update_option( 'oxd_openid_google_enable', isset( $_POST['oxd_openid_google_enable']) ? $_POST['oxd_openid_google_enable'] : 0);
 				update_option( 'oxd_openid_facebook_enable', isset( $_POST['oxd_openid_facebook_enable']) ? $_POST['oxd_openid_facebook_enable'] : 0);
-				update_option( 'oxd_openid_SMS_enable', isset( $_POST['oxd_openid_SMS_enable']) ? $_POST['oxd_openid_SMS_enable'] : 0);
-				update_option( 'oxd_openid_Mobile_enable', isset( $_POST['oxd_openid_Mobile_enable']) ? $_POST['oxd_openid_Mobile_enable'] : 0);
+				update_option( 'oxd_openid_linkedin_enable', isset( $_POST['oxd_openid_linkedin_enable']) ? $_POST['oxd_openid_linkedin_enable'] : 0);
+				update_option( 'oxd_openid_twitter_enable', isset( $_POST['oxd_openid_twitter_enable']) ? $_POST['oxd_openid_twitter_enable'] : 0);
+				update_option( 'oxd_openid_Duo_enable', isset( $_POST['oxd_openid_Duo_enable']) ? $_POST['oxd_openid_Duo_enable'] : 0);
+				update_option( 'oxd_openid_Basic_enable', isset( $_POST['oxd_openid_Basic_enable']) ? $_POST['oxd_openid_Basic_enable'] : 0);
 				update_option( 'oxd_openid_U2F_enable', isset( $_POST['oxd_openid_U2F_enable']) ? $_POST['oxd_openid_U2F_enable'] : 0);
 
 				update_option( 'oxd_openid_default_login_enable', isset( $_POST['oxd_openid_default_login_enable']) ? $_POST['oxd_openid_default_login_enable'] : 0);
@@ -326,7 +346,7 @@ class gluu_OpenID_SSO {
 				update_option( 'oxd_login_icon_custom_color', $_POST['oxd_login_icon_custom_color'] );
 
 				// avatar
-				update_option( 'oxdOpenId_social_login_avatar', isset( $_POST['oxdOpenId_social_login_avatar']) ? $_POST['oxdOpenId_social_login_avatar'] : 0);
+				update_option( 'oxdOpenId_gluu_login_avatar', isset( $_POST['oxdOpenId_gluu_login_avatar']) ? $_POST['oxdOpenId_gluu_login_avatar'] : 0);
 
 				//Attribute collection
 				update_option( 'oxdOpenId_user_attributes', isset( $_POST['oxdOpenId_user_attributes']) ? $_POST['oxdOpenId_user_attributes'] : 0);
@@ -357,7 +377,7 @@ class gluu_OpenID_SSO {
 		}
 	}
 
-	function oxd_social_login_custom_avatar( $avatar, $mixed, $size, $default, $alt = '' ) {
+	function oxd_gluu_login_custom_avatar( $avatar, $mixed, $size, $default, $alt = '' ) {
 		$user = false;
 
 		if ( is_numeric( $mixed ) AND $mixed > 0 ) {	//Check if we have an user identifier

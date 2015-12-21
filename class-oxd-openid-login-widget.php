@@ -1,5 +1,4 @@
 <?php
-include_once dirname( __FILE__ ) . '/oxd-rp/Register_site.php';
 include_once dirname( __FILE__ ) . '/oxd-rp/Get_authorization_url.php';
 include_once dirname( __FILE__ ) . '/oxd-rp/Get_tokens_by_code.php';
 include_once dirname( __FILE__ ) . '/oxd-rp/Get_user_info.php';
@@ -15,7 +14,7 @@ if(is_oxd_registered()) {
 			parent::__construct(
 					'oxd_openid_login_wid',
 					'gluu Login Widget',
-					array( 'description' => __( 'Login using Social Apps like Google, Facebook, U2F, Mobile, SMS.', 'flw' ), )
+					array( 'description' => __( 'Login using Social Apps like Google, Facebook, LinkedIn, Twitter and Gluu Apps like U2F, Basic, Duo.', 'flw' ), )
 			);
 		}
 
@@ -23,11 +22,8 @@ if(is_oxd_registered()) {
 		public function widget( $args, $instance ) {
 			extract( $args );
 
-			//$wid_title = apply_filters( 'widget_title', $instance['wid_title'] );
 
 			echo $args['before_widget'];
-			//if ( ! empty( $wid_title ) )
-			//	echo $args['before_title'] . $wid_title . $args['after_title'];
 			$this->openidloginForm();
 
 			echo $args['after_widget'];
@@ -44,7 +40,7 @@ if(is_oxd_registered()) {
 			global $post;
 			$this->error_message();
 			$selected_theme = get_option('oxd_openid_login_theme');
-			$appsConfigured = get_option('oxd_openid_google_enable') | get_option('oxd_openid_facebook_enable')  | get_option('oxd_openid_SMS_enable')  | get_option('oxd_openid_Mobile_enable') | get_option('oxd_openid_U2F_enable');
+			$appsConfigured = get_option('oxd_openid_google_enable') | get_option('oxd_openid_facebook_enable')  | get_option('oxd_openid_linkedin_enable')  | get_option('oxd_openid_twitter_enable')  | get_option('oxd_openid_Duo_enable')  | get_option('oxd_openid_Basic_enable') | get_option('oxd_openid_U2F_enable');
 			$spacebetweenicons = get_option('oxd_login_icon_space');
 			$customWidth = get_option('oxd_login_icon_custom_width');
 			$customHeight = get_option('oxd_login_icon_custom_height');
@@ -57,8 +53,6 @@ if(is_oxd_registered()) {
 				if( $appsConfigured ) {
 					$this->oxd_openid_load_login_script();
 					?>
-
-					<a href="http://gluu.com/single-sign-on-sso" hidden></a>
 
 					<div class="oxd-openid-app-icons">
 
@@ -77,6 +71,28 @@ if(is_oxd_registered()) {
 
 								<?php }
 
+							}
+							if( get_option('oxd_openid_linkedin_enable') ) {
+								if($selected_theme == 'longbutton'){	?>
+									<a  onClick="oxdOpenIdLogin('linkedin');" style="width:<?php echo $customWidth ?>px !important;padding-top:<?php echo $customHeight-29 ?>px !important;padding-bottom:<?php echo $customHeight-29 ?>px !important;margin-bottom:<?php echo $spacebetweenicons-5 ?>px !important" class="btn btn-block btn-social btn-linkedin btn-custom-size login-button" > <i style="padding-top:<?php echo $customHeight-35 ?>px !important" class="fa fa-linkedin"></i><?php
+										echo get_option('oxd_openid_login_button_customize_text'); 	?> LinkedIn</a>
+								<?php }
+								else{ ?>
+
+
+									<a title="<?php echo $customTextofTitle ?> LinkedIn" onClick="oxdOpenIdLogin('linkedin');"><img style="width:<?php echo $customSize?>px !important;height:<?php echo $customSize?>px !important;margin-left:<?php echo $spacebetweenicons-4?>px !important"  src="<?php echo plugins_url( 'includes/images/icons/linkedin.png', __FILE__ )?>" class="<?php echo $selected_theme; ?> login-button"></a>
+								<?php }
+							}
+							if( get_option('oxd_openid_twitter_enable') ) {
+								if($selected_theme == 'longbutton'){	?>
+									<a  onClick="oxdOpenIdLogin('twitter');" style="width:<?php echo $customWidth ?>px !important;padding-top:<?php echo $customHeight-29 ?>px !important;padding-bottom:<?php echo $customHeight-29 ?>px !important;margin-bottom:<?php echo $spacebetweenicons-5 ?>px !important" class="btn btn-block btn-social btn-twitter btn-custom-size login-button" > <i style="padding-top:<?php echo $customHeight-35 ?>px !important" class="fa fa-twitter"></i><?php
+										echo get_option('oxd_openid_login_button_customize_text'); 	?> Twitter</a>
+								<?php }
+								else{ ?>
+
+
+									<a title="<?php echo $customTextofTitle ?> Twitter" onClick="oxdOpenIdLogin('twitter');"><img style="width:<?php echo $customSize?>px !important;height:<?php echo $customSize?>px !important;margin-left:<?php echo $spacebetweenicons-4?>px !important"  src="<?php echo plugins_url( 'includes/images/icons/twitter.png', __FILE__ )?>" class="<?php echo $selected_theme; ?> login-button"></a>
+								<?php }
 							}
 							if( get_option('oxd_openid_google_enable') ) {
 								if($selected_theme == 'longbutton'){
@@ -105,27 +121,27 @@ if(is_oxd_registered()) {
 							}
 
 
-							if( get_option('oxd_openid_Mobile_enable') ) {
+							if( get_option('oxd_openid_Basic_enable') ) {
 								if($selected_theme == 'longbutton'){
-									?> <a  onClick="oxdOpenIdLogin('Mobile');" style="width:<?php echo $customWidth ?>px !important;padding-top:<?php echo $customHeight-29 ?>px !important;padding-bottom:<?php echo $customHeight-29 ?>px !important;margin-bottom:<?php echo $spacebetweenicons-5 ?>px !important" class="btn btn-block btn-social btn-Mobile btn-custom-size login-button" > <i style="padding-top:<?php echo $customHeight-35 ?>px !important" class="fa fa-mobile"></i><?php
-										echo get_option('oxd_openid_login_button_customize_text'); 	?> Mobile</a>
+									?> <a  onClick="oxdOpenIdLogin('Basic');" style="width:<?php echo $customWidth ?>px !important;padding-top:<?php echo $customHeight-29 ?>px !important;padding-bottom:<?php echo $customHeight-29 ?>px !important;margin-bottom:<?php echo $spacebetweenicons-5 ?>px !important" class="btn btn-block btn-social btn-Basic btn-custom-size login-button" > <i style="padding-top:<?php echo $customHeight-35 ?>px !important" class="fa fa-Basic"></i><?php
+										echo get_option('oxd_openid_login_button_customize_text'); 	?> Basic</a>
 								<?php }
 								else{ ?>
 
 
-									<a title="<?php echo $customTextofTitle ?> Mobile" onClick="oxdOpenIdLogin('Mobile');"><img style="width:<?php echo $customSize?>px !important;height:<?php echo $customSize?>px !important;margin-left:<?php echo $spacebetweenicons-4?>px !important"  src="<?php echo plugins_url( 'includes/images/icons/Mobile.png', __FILE__ )?>" class="<?php echo $selected_theme; ?> login-button"></a>
+									<a title="<?php echo $customTextofTitle ?> Basic" onClick="oxdOpenIdLogin('Basic');"><img style="width:<?php echo $customSize?>px !important;height:<?php echo $customSize?>px !important;margin-left:<?php echo $spacebetweenicons-4?>px !important"  src="<?php echo plugins_url( 'includes/images/icons/Basic.png', __FILE__ )?>" class="<?php echo $selected_theme; ?> login-button"></a>
 								<?php }
 							}
 
-							if( get_option('oxd_openid_SMS_enable') ) {
+							if( get_option('oxd_openid_Duo_enable') ) {
 								if($selected_theme == 'longbutton'){	?>
-									<a  onClick="oxdOpenIdLogin('SMS');" style="width:<?php echo $customWidth ?>px !important;padding-top:<?php echo $customHeight-29 ?>px !important;padding-bottom:<?php echo $customHeight-29 ?>px !important;margin-bottom:<?php echo $spacebetweenicons-5 ?>px !important" class="btn btn-block btn-social btn-SMS btn-custom-size login-button" > <i style="padding-top:<?php echo $customHeight-35 ?>px !important" class="fa fa-commenting-o"></i><?php
-										echo get_option('oxd_openid_login_button_customize_text'); 	?> SMS</a>
+									<a  onClick="oxdOpenIdLogin('Duo');" style="width:<?php echo $customWidth ?>px !important;padding-top:<?php echo $customHeight-29 ?>px !important;padding-bottom:<?php echo $customHeight-29 ?>px !important;margin-bottom:<?php echo $spacebetweenicons-5 ?>px !important" class="btn btn-block btn-social btn-Duo btn-custom-size login-button" > <i style="padding-top:<?php echo $customHeight-35 ?>px !important" class="fa fa-commenting-o"></i><?php
+										echo get_option('oxd_openid_login_button_customize_text'); 	?> Duo</a>
 								<?php }
 								else{ ?>
 
 
-									<a title="<?php echo $customTextofTitle ?> SMS" onClick="oxdOpenIdLogin('SMS');"><img style="width:<?php echo $customSize?>px !important;height:<?php echo $customSize?>px !important;margin-left:<?php echo $spacebetweenicons-4?>px !important"  src="<?php echo plugins_url( 'includes/images/icons/SMS.png', __FILE__ )?>" class="<?php echo $selected_theme; ?> login-button"></a>
+									<a title="<?php echo $customTextofTitle ?> Duo" onClick="oxdOpenIdLogin('Duo');"><img style="width:<?php echo $customSize?>px !important;height:<?php echo $customSize?>px !important;margin-left:<?php echo $spacebetweenicons-4?>px !important"  src="<?php echo plugins_url( 'includes/images/icons/Duo.png', __FILE__ )?>" class="<?php echo $selected_theme; ?> login-button"></a>
 								<?php }
 							}
 
@@ -148,7 +164,28 @@ if(is_oxd_registered()) {
 								<?php }
 
 							}
+							if( get_option('oxd_openid_linkedin_enable') ) {
+								if($selected_theme == 'longbutton'){	?>
+									<a  onClick="oxdOpenIdLogin('linkedin');" style="width:<?php echo $customWidth ?>px !important;padding-top:<?php echo $customHeight-29 ?>px !important;padding-bottom:<?php echo $customHeight-29 ?>px !important;margin-bottom:<?php echo $spacebetweenicons-5 ?>px !important;background:<?php echo "#".$customBackground?> !important;background:<?php echo "#".$customBackground?> !important" class="btn btn-block btn-social btn-linkedin btn-custom-size login-button" > <i style="padding-top:<?php echo $customHeight-35 ?>px !important" class="fa fa-linkedin"></i><?php
+										echo get_option('oxd_openid_login_button_customize_text'); 	?> LinkedIn</a>
+								<?php }
+								else{ ?>
 
+
+									<a  onClick="oxdOpenIdLogin('linkedin');" title="<?php echo $customTextofTitle ?> LinkedIn"><i style="width:<?php echo $customSize?>px !important;height:<?php echo $customSize?>px !important;margin-left:<?php echo $spacebetweenicons-4?>px !important;background:<?php echo "#".$customBackground?> !important;font-size:<?php echo $customSize-16?>px !important;"   class="fa fa-linkedin custom-login-button <?php echo $selected_theme; ?>"></i></a>
+								<?php }
+							}
+							if( get_option('oxd_openid_twitter_enable') ) {
+								if($selected_theme == 'longbutton'){	?>
+									<a  onClick="oxdOpenIdLogin('twitter');" style="width:<?php echo $customWidth ?>px !important;padding-top:<?php echo $customHeight-29 ?>px !important;padding-bottom:<?php echo $customHeight-29 ?>px !important;margin-bottom:<?php echo $spacebetweenicons-5 ?>px !important;background:<?php echo "#".$customBackground?> !important;background:<?php echo "#".$customBackground?> !important" class="btn btn-block btn-social btn-twitter btn-custom-size login-button" > <i style="padding-top:<?php echo $customHeight-35 ?>px !important" class="fa fa-twitter"></i><?php
+										echo get_option('oxd_openid_login_button_customize_text'); 	?> Twitter</a>
+								<?php }
+								else{ ?>
+
+
+									<a  onClick="oxdOpenIdLogin('twitter');" title="<?php echo $customTextofTitle ?> Twitter"><i style="width:<?php echo $customSize?>px !important;height:<?php echo $customSize?>px !important;margin-left:<?php echo $spacebetweenicons-4?>px !important;background:<?php echo "#".$customBackground?> !important;font-size:<?php echo $customSize-16?>px !important;"   class="fa fa-twitter custom-login-button <?php echo $selected_theme; ?>"></i></a>
+								<?php }
+							}
 							if( get_option('oxd_openid_google_enable') ) {
 								if($selected_theme == 'longbutton'){
 									?>
@@ -175,27 +212,27 @@ if(is_oxd_registered()) {
 								}
 							}
 
-							if( get_option('oxd_openid_Mobile_enable') ) {
+							if( get_option('oxd_openid_Basic_enable') ) {
 								if($selected_theme == 'longbutton'){
 									?>
 
-									<a   onClick="oxdOpenIdLogin('Mobile');" style="width:<?php echo $customWidth ?>px !important;padding-top:<?php echo $customHeight-29 ?>px !important;padding-bottom:<?php echo $customHeight-29 ?>px !important;margin-bottom:<?php echo $spacebetweenicons-5 ?>px !important; background:<?php echo "#".$customBackground?> !important" class="btn btn-block btn-social btn-customtheme btn-custom-size login-button" > <i style="padding-top:<?php echo $customHeight-35 ?>px !important" class="fa fa-mobile"></i><?php
-										echo get_option('oxd_openid_login_button_customize_text'); 	?> Mobile</a>
+									<a   onClick="oxdOpenIdLogin('Basic');" style="width:<?php echo $customWidth ?>px !important;padding-top:<?php echo $customHeight-29 ?>px !important;padding-bottom:<?php echo $customHeight-29 ?>px !important;margin-bottom:<?php echo $spacebetweenicons-5 ?>px !important; background:<?php echo "#".$customBackground?> !important" class="btn btn-block btn-social btn-customtheme btn-custom-size login-button" > <i style="padding-top:<?php echo $customHeight-35 ?>px !important" class="fa fa-Basic"></i><?php
+										echo get_option('oxd_openid_login_button_customize_text'); 	?> Basic</a>
 								<?php }
 								else{ ?>
-									<a  onClick="oxdOpenIdLogin('Mobile');" title="<?php echo $customTextofTitle ?> Mobile"><i style="width:<?php echo $customSize?>px !important;height:<?php echo $customSize?>px !important;margin-left:<?php echo $spacebetweenicons-4?>px !important;background:<?php echo "#".$customBackground?> !important;font-size:<?php echo $customSize-16?>px !important;"  class="fa fa-mobile custom-login-button <?php echo $selected_theme; ?>" ></i></a>
+									<a  onClick="oxdOpenIdLogin('Basic');" title="<?php echo $customTextofTitle ?> Basic"><i style="width:<?php echo $customSize?>px !important;height:<?php echo $customSize?>px !important;margin-left:<?php echo $spacebetweenicons-4?>px !important;background:<?php echo "#".$customBackground?> !important;font-size:<?php echo $customSize-16?>px !important;"  class="fa fa-Basic custom-login-button <?php echo $selected_theme; ?>" ></i></a>
 									<?php
 								}
 							}
-							if( get_option('oxd_openid_SMS_enable') ) {
+							if( get_option('oxd_openid_Duo_enable') ) {
 								if($selected_theme == 'longbutton'){	?>
-									<a  onClick="oxdOpenIdLogin('SMS');" style="width:<?php echo $customWidth ?>px !important;padding-top:<?php echo $customHeight-29 ?>px !important;padding-bottom:<?php echo $customHeight-29 ?>px !important;margin-bottom:<?php echo $spacebetweenicons-5 ?>px !important;background:<?php echo "#".$customBackground?> !important;background:<?php echo "#".$customBackground?> !important" class="btn btn-block btn-social btn-SMS btn-custom-size login-button" > <i style="padding-top:<?php echo $customHeight-35 ?>px !important" class="fa fa-commenting-o"></i><?php
-										echo get_option('oxd_openid_login_button_customize_text'); 	?> SMS</a>
+									<a  onClick="oxdOpenIdLogin('Duo');" style="width:<?php echo $customWidth ?>px !important;padding-top:<?php echo $customHeight-29 ?>px !important;padding-bottom:<?php echo $customHeight-29 ?>px !important;margin-bottom:<?php echo $spacebetweenicons-5 ?>px !important;background:<?php echo "#".$customBackground?> !important;background:<?php echo "#".$customBackground?> !important" class="btn btn-block btn-social btn-Duo btn-custom-size login-button" > <i style="padding-top:<?php echo $customHeight-35 ?>px !important" class="fa fa-commenting-o"></i><?php
+										echo get_option('oxd_openid_login_button_customize_text'); 	?> Duo</a>
 								<?php }
 								else{ ?>
 
 
-									<a  onClick="oxdOpenIdLogin('SMS');" title="<?php echo $customTextofTitle ?> SMS"><i style="width:<?php echo $customSize?>px !important;height:<?php echo $customSize?>px !important;margin-left:<?php echo $spacebetweenicons-4?>px !important;background:<?php echo "#".$customBackground?> !important;font-size:<?php echo $customSize-16?>px !important;"   class="fa fa-commenting-o custom-login-button <?php echo $selected_theme; ?>"></i></a>
+									<a  onClick="oxdOpenIdLogin('Duo');" title="<?php echo $customTextofTitle ?> Duo"><i style="width:<?php echo $customSize?>px !important;height:<?php echo $customSize?>px !important;margin-left:<?php echo $spacebetweenicons-4?>px !important;background:<?php echo "#".$customBackground?> !important;font-size:<?php echo $customSize-16?>px !important;"   class="fa fa-commenting-o custom-login-button <?php echo $selected_theme; ?>"></i></a>
 								<?php }
 							}
 
@@ -232,7 +269,7 @@ if(is_oxd_registered()) {
 			$html = '';
 			$this->error_message();
 			$selected_theme = isset( $atts['shape'] )? $atts['shape'] : get_option('oxd_openid_login_theme');
-			$appsConfigured = get_option('oxd_openid_google_enable') | get_option('oxd_openid_facebook_enable')  | get_option('oxd_openid_SMS_enable') |get_option('oxd_openid_Mobile_enable') | get_option('oxd_openid_U2F_enable');
+			$appsConfigured = get_option('oxd_openid_google_enable') | get_option('oxd_openid_facebook_enable')  | get_option('oxd_openid_twitter_enable')  | get_option('oxd_openid_linkedin_enable')  | get_option('oxd_openid_Duo_enable') |get_option('oxd_openid_Basic_enable') | get_option('oxd_openid_U2F_enable');
 			$spacebetweenicons = isset( $atts['space'] )? $atts['space'] : get_option('oxd_login_icon_space');
 			$customWidth = isset( $atts['width'] )? $atts['width'] : get_option('oxd_login_icon_custom_width');
 			$customHeight = isset( $atts['height'] )? $atts['height'] : get_option('oxd_login_icon_custom_height');
@@ -268,7 +305,22 @@ if(is_oxd_registered()) {
 							}
 
 						}
+						if( get_option('oxd_openid_linkedin_enable') ) {
+							if($selected_theme == 'longbutton'){
+								$html .= "<a  style='width: " . $customWidth . "px !important;padding-top:" . ($customHeight-29) . "px !important;padding-bottom:" . ($customHeight-29) . "px !important;margin-bottom: " . ($spacebetweenicons-5)  . "px !important' class='btn btn-block btn-social btn-linkedin btn-custom-dec login-button' onClick='oxdOpenIdLogin(" . '"linkedin"' . ");'> <i style='padding-top:" . ($customHeight-35) . "px !important' class='fa fa-linkedin'></i>" . $buttonText . " LinkedIn</a>"; }
+							else{
+								$html .= "<a title= ' ".$customTextofTitle." LinkedIn' onClick='oxdOpenIdLogin(" . '"linkedin"' . ");' ><img style='width:" . $customSize ."px !important;height: " . $customSize ."px !important;margin-left: " . ($spacebetweenicons-4) ."px !important' src='" . plugins_url( 'includes/images/icons/linkedin.png', __FILE__ ) . "' class='login-button " .$selected_theme . "' ></a>";
+							}
 
+						}
+						if( get_option('oxd_openid_twitter_enable') ) {
+							if($selected_theme == 'longbutton'){
+								$html .= "<a  style='width: " . $customWidth . "px !important;padding-top:" . ($customHeight-29) . "px !important;padding-bottom:" . ($customHeight-29) . "px !important;margin-bottom: " . ($spacebetweenicons-5)  . "px !important' class='btn btn-block btn-social btn-twitter btn-custom-dec login-button' onClick='oxdOpenIdLogin(" . '"twitter"' . ");'> <i style='padding-top:" . ($customHeight-35) . "px !important' class='fa fa-twitter'></i>" . $buttonText . " Twitter</a>"; }
+							else{
+								$html .= "<a title= ' ".$customTextofTitle." Twitter' onClick='oxdOpenIdLogin(" . '"twitter"' . ");' ><img style='width:" . $customSize ."px !important;height: " . $customSize ."px !important;margin-left: " . ($spacebetweenicons-4) ."px !important' src='" . plugins_url( 'includes/images/icons/twitter.png', __FILE__ ) . "' class='login-button " .$selected_theme . "' ></a>";
+							}
+
+						}
 						if( get_option('oxd_openid_google_enable') ) {
 							if($selected_theme == 'longbutton'){
 								$html .= "<a  style='width: " . $customWidth . "px !important;padding-top:" . ($customHeight-29) . "px !important;padding-bottom:" . ($customHeight-29) . "px !important;margin-bottom: " . ($spacebetweenicons-5)  . "px !important' class='btn btn-block btn-social btn-google btn-custom-dec login-button' onClick='oxdOpenIdLogin(" . '"google"' . ");'> <i style='padding-top:" . ($customHeight-35) . "px !important' class='fa fa-google-plus'></i>" . $buttonText . " Google</a>";
@@ -291,20 +343,20 @@ if(is_oxd_registered()) {
 							}
 						}
 
-						if( get_option('oxd_openid_Mobile_enable') ) {
+						if( get_option('oxd_openid_Basic_enable') ) {
 							if($selected_theme == 'longbutton'){
-								$html .= "<a  style='width: " . $customWidth . "px !important;padding-top:" . ($customHeight-29) . "px !important;padding-bottom:" . ($customHeight-29) . "px !important;margin-bottom: " . ($spacebetweenicons-5)  . "px !important' class='btn btn-block btn-social btn-Mobile btn-custom-dec login-button' onClick='oxdOpenIdLogin(" . '"Mobile"' . ");'> <i style='padding-top:" . ($customHeight-35) . "px !important' class='fa fa-mobile'></i>" . $buttonText . " Mobile</a>"; }
+								$html .= "<a  style='width: " . $customWidth . "px !important;padding-top:" . ($customHeight-29) . "px !important;padding-bottom:" . ($customHeight-29) . "px !important;margin-bottom: " . ($spacebetweenicons-5)  . "px !important' class='btn btn-block btn-social btn-Basic btn-custom-dec login-button' onClick='oxdOpenIdLogin(" . '"Basic"' . ");'> <i style='padding-top:" . ($customHeight-35) . "px !important' class='fa fa-Basic'></i>" . $buttonText . " Basic</a>"; }
 							else{
-								$html .= "<a title= ' ".$customTextofTitle." Mobile' onClick='oxdOpenIdLogin(" . '"Mobile"' . ");' ><img style='width:" . $customSize ."px !important;height: " . $customSize ."px !important;margin-left: " . ($spacebetweenicons-4) ."px !important' src='" . plugins_url( 'includes/images/icons/Mobile.png', __FILE__ ) . "' class='login-button " .$selected_theme . "' ></a>";
+								$html .= "<a title= ' ".$customTextofTitle." Basic' onClick='oxdOpenIdLogin(" . '"Basic"' . ");' ><img style='width:" . $customSize ."px !important;height: " . $customSize ."px !important;margin-left: " . ($spacebetweenicons-4) ."px !important' src='" . plugins_url( 'includes/images/icons/Basic.png', __FILE__ ) . "' class='login-button " .$selected_theme . "' ></a>";
 							}
 
 						}
-						if( get_option('oxd_openid_SMS_enable') ) {
+						if( get_option('oxd_openid_Duo_enable') ) {
 							if($selected_theme == 'longbutton'){
-								$html .= "<a  style='width: " . $customWidth . "px !important;padding-top:" . ($customHeight-29) . "px !important;padding-bottom:" . ($customHeight-29) . "px !important;margin-bottom: " . ($spacebetweenicons-5)  . "px !important' class='btn btn-block btn-social btn-SMS btn-custom-dec login-button' onClick='oxdOpenIdLogin(" . '"SMS"' . ");'> <i style='padding-top:" . ($customHeight-35) . "px !important' class='fa fa-commenting-o'></i>" . $buttonText . " SMS</a>";
+								$html .= "<a  style='width: " . $customWidth . "px !important;padding-top:" . ($customHeight-29) . "px !important;padding-bottom:" . ($customHeight-29) . "px !important;margin-bottom: " . ($spacebetweenicons-5)  . "px !important' class='btn btn-block btn-social btn-Duo btn-custom-dec login-button' onClick='oxdOpenIdLogin(" . '"Duo"' . ");'> <i style='padding-top:" . ($customHeight-35) . "px !important' class='fa fa-commenting-o'></i>" . $buttonText . " Duo</a>";
 							}
 							else{
-								$html .= "<a title= ' ".$customTextofTitle." SMS' onClick='oxdOpenIdLogin(" . '"SMS"' . ");' ><img style='width:" . $customSize ."px !important;height: " . $customSize ."px !important;margin-left: " . ($spacebetweenicons-4) ."px !important' src='" . plugins_url( 'includes/images/icons/SMS.png', __FILE__ ) . "' class='login-button " .$selected_theme . "' ></a>";
+								$html .= "<a title= ' ".$customTextofTitle." Duo' onClick='oxdOpenIdLogin(" . '"Duo"' . ");' ><img style='width:" . $customSize ."px !important;height: " . $customSize ."px !important;margin-left: " . ($spacebetweenicons-4) ."px !important' src='" . plugins_url( 'includes/images/icons/Duo.png', __FILE__ ) . "' class='login-button " .$selected_theme . "' ></a>";
 							}
 						}
 					}
@@ -321,7 +373,24 @@ if(is_oxd_registered()) {
 							}
 
 						}
+						if( get_option('oxd_openid_linkedin_enable') ) {
+							if($selected_theme == 'longbutton'){
+								$html .= "<a   onClick='oxdOpenIdLogin(" . '"linkedin"' . ");' style='width:" . ($customWidth) . "px !important;padding-top:" . ($customHeight-29) . "px !important;padding-bottom:" . ($customHeight-29) . "px !important;margin-bottom:" . ($spacebetweenicons-5) . "px !important; background:#" . $customBackground . "!important;' class='btn btn-block btn-social btn-customtheme btn-custom-dec login-button' > <i style='padding-top:" .($customHeight-35) . "px !important' class='fa fa-linkedin'></i> " . $buttonText . " LinkedIn</a>";
+							}
+							else{
+								$html .= "<a title= ' ".$customTextofTitle." LinkedIn' onClick='oxdOpenIdLogin(" . '"linkedin"' . ");' ><i style='width:" . $customSize . "px !important;height:" . $customSize . "px !important;margin-left:" . ($spacebetweenicons-4) . "px !important;background:#" . $customBackground . " !important;font-size: " . ($customSize-16) . "px !important;'  class='fa fa-linkedin custom-login-button  " . $selected_theme . "' ></i></a>";
+							}
 
+						}
+						if( get_option('oxd_openid_twitter_enable') ) {
+							if($selected_theme == 'longbutton'){
+								$html .= "<a   onClick='oxdOpenIdLogin(" . '"twitter"' . ");' style='width:" . ($customWidth) . "px !important;padding-top:" . ($customHeight-29) . "px !important;padding-bottom:" . ($customHeight-29) . "px !important;margin-bottom:" . ($spacebetweenicons-5) . "px !important; background:#" . $customBackground . "!important;' class='btn btn-block btn-social btn-customtheme btn-custom-dec login-button' > <i style='padding-top:" .($customHeight-35) . "px !important' class='fa fa-twitter'></i> " . $buttonText . " Twitter</a>";
+							}
+							else{
+								$html .= "<a title= ' ".$customTextofTitle." Twitter' onClick='oxdOpenIdLogin(" . '"twitter"' . ");' ><i style='width:" . $customSize . "px !important;height:" . $customSize . "px !important;margin-left:" . ($spacebetweenicons-4) . "px !important;background:#" . $customBackground . " !important;font-size: " . ($customSize-16) . "px !important;'  class='fa fa-twitter custom-login-button  " . $selected_theme . "' ></i></a>";
+							}
+
+						}
 						if( get_option('oxd_openid_google_enable') ) {
 							if($selected_theme == 'longbutton'){
 								$html .= "<a   onClick='oxdOpenIdLogin(" . '"google"' . ");' style='width:" . ($customWidth) . "px !important;padding-top:" . ($customHeight-29) . "px !important;padding-bottom:" . ($customHeight-29) . "px !important;margin-bottom:" . ($spacebetweenicons-5) . "px !important; background:#" . $customBackground . "!important;' class='btn btn-block btn-social btn-customtheme btn-custom-dec login-button' > <i style='padding-top:" .($customHeight-35) . "px !important' class='fa fa-google-plus'></i> " . $buttonText . " Google</a>";
@@ -342,21 +411,21 @@ if(is_oxd_registered()) {
 							}
 						}
 
-						if( get_option('oxd_openid_Mobile_enable') ) {
+						if( get_option('oxd_openid_Basic_enable') ) {
 							if($selected_theme == 'longbutton'){
-								$html .= "<a   onClick='oxdOpenIdLogin(" . '"Mobile"' . ");' style='width:" . ($customWidth) . "px !important;padding-top:" . ($customHeight-29) . "px !important;padding-bottom:" . ($customHeight-29) . "px !important;margin-bottom:" . ($spacebetweenicons-5) . "px !important; background:#" . $customBackground . "!important;' class='btn btn-block btn-social btn-customtheme btn-custom-dec login-button' > <i style='padding-top:" .($customHeight-35) . "px !important' class='fa fa-mobile'></i> " . $buttonText . " Mobile</a>";
+								$html .= "<a   onClick='oxdOpenIdLogin(" . '"Basic"' . ");' style='width:" . ($customWidth) . "px !important;padding-top:" . ($customHeight-29) . "px !important;padding-bottom:" . ($customHeight-29) . "px !important;margin-bottom:" . ($spacebetweenicons-5) . "px !important; background:#" . $customBackground . "!important;' class='btn btn-block btn-social btn-customtheme btn-custom-dec login-button' > <i style='padding-top:" .($customHeight-35) . "px !important' class='fa fa-Basic'></i> " . $buttonText . " Basic</a>";
 							}
 							else{
-								$html .= "<a title= ' ".$customTextofTitle." Mobile' onClick='oxdOpenIdLogin(" . '"Mobile"' . ");' ><i style='width:" . $customSize . "px !important;height:" . $customSize . "px !important;margin-left:" . ($spacebetweenicons-4) . "px !important;background:#" . $customBackground . " !important;font-size: " . ($customSize-16) . "px !important;'  class='fa fa-mobile custom-login-button  " . $selected_theme . "' ></i></a>";
+								$html .= "<a title= ' ".$customTextofTitle." Basic' onClick='oxdOpenIdLogin(" . '"Basic"' . ");' ><i style='width:" . $customSize . "px !important;height:" . $customSize . "px !important;margin-left:" . ($spacebetweenicons-4) . "px !important;background:#" . $customBackground . " !important;font-size: " . ($customSize-16) . "px !important;'  class='fa fa-Basic custom-login-button  " . $selected_theme . "' ></i></a>";
 							}
 
 						}
-						if( get_option('oxd_openid_SMS_enable') ) {
+						if( get_option('oxd_openid_Duo_enable') ) {
 							if($selected_theme == 'longbutton'){
-								$html .= "<a   onClick='oxdOpenIdLogin(" . '"SMS"' . ");' style='width:" . ($customWidth) . "px !important;padding-top:" . ($customHeight-29) . "px !important;padding-bottom:" . ($customHeight-29) . "px !important;margin-bottom:" . ($spacebetweenicons-5) . "px !important; background:#" . $customBackground . "!important;' class='btn btn-block btn-social btn-customtheme btn-custom-dec login-button' > <i style='padding-top:" .($customHeight-35) . "px !important' class='fa fa-commenting-o'></i> " . $buttonText . " SMS</a>";
+								$html .= "<a   onClick='oxdOpenIdLogin(" . '"Duo"' . ");' style='width:" . ($customWidth) . "px !important;padding-top:" . ($customHeight-29) . "px !important;padding-bottom:" . ($customHeight-29) . "px !important;margin-bottom:" . ($spacebetweenicons-5) . "px !important; background:#" . $customBackground . "!important;' class='btn btn-block btn-social btn-customtheme btn-custom-dec login-button' > <i style='padding-top:" .($customHeight-35) . "px !important' class='fa fa-commenting-o'></i> " . $buttonText . " Duo</a>";
 							}
 							else{
-								$html .= "<a title= ' ".$customTextofTitle." SMS' onClick='oxdOpenIdLogin(" . '"SMS"' . ");' ><i style='width:" . $customSize . "px !important;height:" . $customSize . "px !important;margin-left:" . ($spacebetweenicons-4) . "px !important;background:#" . $customBackground . " !important;font-size: " . ($customSize-16) . "px !important;'  class='fa fa-commenting-o custom-login-button  " . $selected_theme . "' ></i></a>";
+								$html .= "<a title= ' ".$customTextofTitle." Duo' onClick='oxdOpenIdLogin(" . '"Duo"' . ");' ><i style='width:" . $customSize . "px !important;height:" . $customSize . "px !important;margin-left:" . ($spacebetweenicons-4) . "px !important;background:#" . $customBackground . " !important;font-size: " . ($customSize-16) . "px !important;'  class='fa fa-commenting-o custom-login-button  " . $selected_theme . "' ></i></a>";
 							}
 						}
 					}
@@ -429,11 +498,10 @@ if(is_oxd_registered()) {
 	function oxd_openid_end_session() {
 		$config_option = get_option( 'oxd_config' );
 		$logout = new Logout();
-		$logout->setRequestOxdId(get_option('user_oxd_id'));
+		$logout->setRequestOxdId(get_option('oxd_id'));
 		$logout->setRequestPostLogoutRedirectUri($config_option['logout_redirect_uri']);
 		$logout->setRequestIdToken(get_option('user_oxd_access_token'));
 		$logout->request();
-		delete_option('user_oxd_id');
 		delete_option('user_oxd_id_token');
 		delete_option('user_oxd_access_token');
 
@@ -455,52 +523,47 @@ if(is_oxd_registered()) {
 				$app = 'gplus';
 			}elseif($_REQUEST['app_name']=='facebook'){
 				$app = 'facebook';
+			}elseif($_REQUEST['app_name']=='linkedin'){
+				$app = 'linkedin';
+			}elseif($_REQUEST['app_name']=='twitter'){
+				$app = 'twitter';
 			}elseif($_REQUEST['app_name']=='U2F'){
-				$app = 'U2F';
-			}elseif($_REQUEST['app_name']=='Mobile'){
-				$app = 'Mobile';
-			}elseif($_REQUEST['app_name']=='SMS'){
-				$app = 'SMS';
+				$app = 'u2f';
+			}elseif($_REQUEST['app_name']=='Basic'){
+				$app = 'basic';
+			}elseif($_REQUEST['app_name']=='Duo'){
+				$app = '';
 			}
-			$base_return_url =  $http . $_SERVER["HTTP_HOST"] . strtok($_SERVER["REQUEST_URI"],'?') . $post;
-			$return_url = strpos($base_return_url, '?') !== false ? $base_return_url . '&option=oxdOpenId': $base_return_url . '?option=oxdOpenId';
-			$email = get_option('oxd_openid_admin_email');
-			if(get_option('user_oxd_id')){
-				delete_option('user_oxd_id');
-			}
-			$config_option = get_option( 'oxd_config' );
-			$register_site = new Register_site();
-
-			$register_site->setRequestAcrValues(["gplus" ]);
-			$register_site->setRequestAuthorizationRedirectUri($return_url);
-			$register_site->setRequestRedirectUris([ $return_url ]);
-			$register_site->setRequestLogoutRedirectUri($config_option['logout_redirect_uri']);
-			$register_site->setRequestContacts([$email]);
-
-			$register_site->setRequestClientJwksUri("");
-			$register_site->setRequestClientRequestUris([]);
-			$register_site->setRequestClientTokenEndpointAuthMethod("");
-
-
-			$register_site->request();
-
-			add_option('user_oxd_id',$register_site->getResponseOxdId());
+			$conf = get_option('oxd_config');
 			$get_authorization_url = new Get_authorization_url();
-			$get_authorization_url->setRequestOxdId($register_site->getResponseOxdId());
+			$get_authorization_url->setRequestOxdId(get_option('oxd_id'));
 			$get_authorization_url->setRequestAcrValues([$app]);
 			$get_authorization_url->request();
-			wp_redirect( $get_authorization_url->getResponseAuthorizationUrl() );
+			$url = str_replace($conf['authorization_redirect_uri'].'#',$conf['authorization_redirect_uri'],$get_authorization_url->getResponseAuthorizationUrl());
+			wp_redirect( $url );
 			exit;
 		}
 
-		if( isset( $_REQUEST['option'] ) and strpos( $_REQUEST['option'], 'oxdOpenId' ) !== false ){
-
+		if(isset( $_REQUEST['option'] ) and strpos( $_REQUEST['option'], 'oxdOpenId' ) !== false ){
+			$http = isset($_SERVER['HTTPS']) && !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? "https://" : "http://";
+			$parts = parse_url($http . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"]);
+			parse_str($parts['query'], $query);
+			$config_option = get_option( 'oxd_config' );
+			/*
+			$logout = new Logout();
+			$logout->setRequestOxdId(get_option('oxd_id'));
+			$logout->setRequestPostLogoutRedirectUri($config_option['logout_redirect_uri']);
+			$logout->setRequestIdToken(get_option('user_oxd_access_token'));
+			$logout->request();
+			delete_option('user_oxd_id_token');
+			delete_option('user_oxd_access_token');
+			exit;*/
 			$get_tokens_by_code = new Get_tokens_by_code();
 
-			$get_tokens_by_code->setRequestOxdId(get_option('user_oxd_id'));
-			$get_tokens_by_code->setRequestCode($_GET['code']);
-			$get_tokens_by_code->setRequestState($_GET['state']);
-			$get_tokens_by_code->setRequestScopes(["openid", "profile"]);
+			$get_tokens_by_code->setRequestOxdId(get_option('oxd_id'));
+			$get_tokens_by_code->setRequestCode($query['code']);
+			$get_tokens_by_code->setRequestState($query['state']);
+			$get_tokens_by_code->setRequestScopes($config_option["scope"]);
 
 			$get_tokens_by_code->request();
 			if(get_option('user_oxd_id_token')){
@@ -511,10 +574,9 @@ if(is_oxd_registered()) {
 				add_option('user_oxd_access_token',$get_tokens_by_code->getResponseAccessToken());
 			}
 			$get_user_info = new Get_user_info();
-			$get_user_info->setRequestOxdId(get_option('user_oxd_id'));
+			$get_user_info->setRequestOxdId(get_option('oxd_id'));
 			$get_user_info->setRequestAccessToken(get_option('user_oxd_access_token'));
 			$get_user_info->request();
-
 			$am_hosts = '';
 			if(get_option('oxd_openid_gluu_server_url')){
 				$disallowed = array('http://', 'https://');
@@ -525,7 +587,9 @@ if(is_oxd_registered()) {
 				}
 			}
 			$user_email = '';
-			if($get_user_info->getResponsePreferredUsername() ) {
+			if($get_user_info->getResponseEmail() ) {
+				$user_email = $get_user_info->getResponseEmail();
+			}else{
 				$user_email = $get_user_info->getResponsePreferredUsername().'@'.$am_hosts;
 			}
 
@@ -557,14 +621,14 @@ if(is_oxd_registered()) {
 				if( email_exists( $user_email ) ) { // user is a member
 					$user 	= get_user_by('email', $user_email );
 					$user_id 	= $user->ID;
-					if(get_option('oxdOpenId_social_login_avatar') && isset($user_picture))
+					if(get_option('oxdOpenId_gluu_login_avatar') && isset($user_picture))
 						update_user_meta($user_id, 'oxdOpenId_user_avatar', $user_picture);
 					do_action( 'wp_login', $user->user_login, $user );
 					wp_set_auth_cookie( $user_id, true );
 				} else if( username_exists( $username ) ) { // user is a member
 					$user 	= get_user_by('login', $username );
 					$user_id 	= $user->ID;
-					if(get_option('oxdOpenId_social_login_avatar') && isset($user_picture))
+					if(get_option('oxdOpenId_gluu_login_avatar') && isset($user_picture))
 						update_user_meta($user_id, 'oxdOpenId_user_avatar', $user_picture);
 					do_action( 'wp_login', $user->user_login, $user );
 					wp_set_auth_cookie( $user_id, true );
@@ -587,7 +651,7 @@ if(is_oxd_registered()) {
 						$user_id 	= wp_insert_user( $userdata);
 						$user	= get_user_by('email', $user_email );
 
-						if(get_option('oxdOpenId_social_login_avatar') && isset($user_picture)){
+						if(get_option('oxdOpenId_gluu_login_avatar') && isset($user_picture)){
 							update_user_meta($user_id, 'oxdOpenId_user_avatar', $user_picture);
 						}
 						do_action( 'wp_login', $user->user_login, $user );
