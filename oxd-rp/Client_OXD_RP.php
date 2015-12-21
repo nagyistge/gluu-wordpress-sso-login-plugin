@@ -7,7 +7,7 @@ include_once 'Client_Socket_OXD_RP.php';
 
 abstract class Client_OXD_RP extends Client_Socket_OXD_RP{
 
-    private $command_types = array( 'get_authorization_url', 'get_tokens_by_code','get_user_info', 'register_site' );
+    private $command_types = array( 'get_authorization_url','logout', 'get_tokens_by_code','get_user_info', 'register_site' );
     protected $data = array();
     protected $command;
     protected $params = array();
@@ -60,8 +60,8 @@ abstract class Client_OXD_RP extends Client_Socket_OXD_RP{
             $lenght = $lenght <= 999 ? "0" . $lenght : $lenght;
         }
 
-        $this->oxd_socket_request(utf8_encode($lenght . $jsondata));
-        $this->response_json = $this->oxd_socket_response();
+
+        $this->response_json =  $this->oxd_socket_request(utf8_encode($lenght . $jsondata));
 
         $this->response_json = str_replace(substr($this->response_json, 0, 4), "", $this->response_json);
         if ($this->response_json) {

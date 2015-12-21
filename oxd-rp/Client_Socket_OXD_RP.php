@@ -27,43 +27,20 @@ class Client_Socket_OXD_RP{
         }else{
             $this->error_message($oxd_config['oxd_host_port']."is not a valid port for socket. Port must be integer and between from 0 to 65535.");
         }
-        $this->oxd_socket_connection();
     }
     /**
      * request to oxd socket
      **/
-    public function oxd_socket_request($data){
-        fwrite(self::$socket, $data);
-    }
-    /**
-     * response from oxd socket
-     * @return string
-     **/
-    public function oxd_socket_response($char_count = 8192){
-        $result = fread(self::$socket, $char_count);
-        return $result;
-    }
-
-    /*
-     * connection
-     * */
-    public function oxd_socket_connection(){
+    public function oxd_socket_request($data,$char_count = 8192){
         $oxd_config = get_option('oxd_config');
         if (!self::$socket = stream_socket_client( $oxd_config['oxd_host_ip'] . ':' . $oxd_config['oxd_host_port'], $errno, $errstr, STREAM_CLIENT_PERSISTENT)) {
             die($errno);
-        }else{
         }
+        fwrite(self::$socket, $data);
+        $result = fread(self::$socket, $char_count);
+        fclose(self::$socket);
+        return $result;
     }
-
-    /**
-     * function closing socket connection.
-     **/
-    public function disconnect()
-    {
-        if(fclose(self::$socket)){
-        }
-    }
-
 
     /**
      * showing errors and exit.

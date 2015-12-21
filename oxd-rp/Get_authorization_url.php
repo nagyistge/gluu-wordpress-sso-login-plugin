@@ -144,7 +144,7 @@ class Get_authorization_url extends Client_OXD_RP
     /**
      * @param null $request_acr_values
      */
-    public function setRequestAcrValues($request_acr_values = ["basic","duo"])
+    public function setRequestAcrValues($request_acr_valuesZZZ)
     {
         $this->request_acr_values = $request_acr_values;
     }
@@ -160,7 +160,6 @@ class Get_authorization_url extends Client_OXD_RP
 
     public function setCommand()
     {
-        $this->setRequestAcrValues();
         $this->command = 'get_authorization_url';
     }
 
