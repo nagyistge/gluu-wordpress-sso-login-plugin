@@ -217,7 +217,9 @@ a{
 	-o-transition: border .2s ease-in-out;
 	transition: border .2s ease-in-out
 }
-
+.mess_red{
+	font-weight:bold ;display:block;margin-top:10px;color:red;background-color:rgba(251, 232, 0, 0.15);padding:5px;border:solid 1px rgba(255, 0, 9, 0.36);
+}
 .oxd_openid_msgs{
 	font-size: 14px !important;
 }

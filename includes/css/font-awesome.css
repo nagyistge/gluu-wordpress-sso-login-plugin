@@ -926,8 +926,8 @@
 .fa-tablet:before {
   content: "\f10a";
 }
-.fa-mobile-phone:before,
-.fa-mobile:before {
+.fa-Basic-phone:before,
+.fa-Basic:before {
   content: "\f10b";
 }
 .fa-circle-o:before {
@@ -1434,7 +1434,7 @@
 .fa-recycle:before {
   content: "\f1b8";
 }
-.fa-automobile:before,
+.fa-autoBasic:before,
 .fa-car:before {
   content: "\f1b9";
 }
