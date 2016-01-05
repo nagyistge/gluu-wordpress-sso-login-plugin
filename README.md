@@ -21,6 +21,7 @@
                    <img src="https://github.com/GluuFederation/gluu-wordpress-oxd-login-plugin/blob/master/docu/7.png">
                    <img src="https://github.com/GluuFederation/gluu-wordpress-oxd-login-plugin/blob/master/docu/8.png">
                    <img src="https://github.com/GluuFederation/gluu-wordpress-oxd-login-plugin/blob/master/docu/9.png">
+                   <img src="https://github.com/GluuFederation/gluu-wordpress-oxd-login-plugin/blob/master/docu/10.png">
                    <table width="100%">
                    		<tbody>
                    			<tr>
