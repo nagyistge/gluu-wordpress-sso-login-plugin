@@ -11,6 +11,12 @@
 	margin-top:10px;
 	padding-left:10px;
 }
+#custom_script_table, #custom_script_table tr,#custom_script_table tr td,#custom_script_table tr th{
+	text-align: center;
+	border: 1px solid green;
+	font-family: "Times New Roman", Times, serif;
+	font-weight: bold;
+}
 .oxd_openid_support_layout{
 	width: 93%;
 	background-color:#FFFFFF;
@@ -20,7 +26,7 @@
 
 }
 .oxd_openid_table_layout {
-	background-color:#FFFFFF;
+	background-color: #e5fff3;
 	border:2px solid #53cc6b;
 	padding:0px 10px 10px 10px;
 	margin-bottom: 10px;

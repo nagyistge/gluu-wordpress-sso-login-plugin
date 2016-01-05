@@ -6,12 +6,11 @@
 	delete_option('oxd_openid_new_registration');
 	delete_option('oxd_openid_admin_email');
 	delete_option('oxd_openid_message');
-	delete_option('oxd_openid_google_enable');
-	delete_option('oxd_openid_facebook_enable');
-	delete_option('oxd_openid_linkedin_enable');
-	delete_option('oxd_openid_twitter_enable');
-	delete_option('oxd_openid_Duo_enable');
-	delete_option('oxd_openid_U2F_enable');
+
+	foreach(get_option('oxd_openid_custom_scripts') as $custom_script){
+		delete_option('oxd_openid_'.$custom_script['value'].'_enable');
+	}
+
 	delete_option('oxd_openid_default_login_enable');
 	delete_option('oxd_openid_default_register_enable');
 	delete_option('oxd_openid_default_comment_enable');
@@ -23,7 +22,7 @@
 
 	delete_option( 'oxd_openid_login_theme' );
 	delete_option( 'oxd_openid_login_button_customize_text');
-	delete_option('oxd_openid_Basic_enable');
+
 
 	delete_option('oxd_login_icon_custom_size');
 	delete_option('oxd_login_icon_space' );
@@ -36,4 +35,5 @@
 	delete_option('oxd_openid_logout_redirect');
 	delete_option('oxd_openid_logout_redirection_enable');
 	delete_option('oxd_openid_logout_redirect_url');
+	delete_option('oxd_openid_scops');
 ?>

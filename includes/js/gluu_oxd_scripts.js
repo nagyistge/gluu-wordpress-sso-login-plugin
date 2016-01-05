@@ -8,8 +8,7 @@ var tempHorCustomTheme = option.oxd_openid_login_custom_theme;
 var tempHorCustomColor = option.oxd_login_icon_custom_color;
 var tempHorSpace = option.oxd_login_icon_space;
 var tempHorHeight = option.oxd_login_icon_custom_height;
-
-
+var customScript = option.oxd_openid_custom_scripts;
 function oxdLoginIncrement(e,t,r,a,i){
     var h,s,c=!1,_=a;s=function(){
         "add"==t&&r.value<60?r.value++:"subtract"==t&&r.value>20&&r.value--,h=setTimeout(s,_),_>20&&(_*=i),c||(document.onmouseup=function(){clearTimeout(h),document.onmouseup=null,c=!1,_=a},c=!0)},e.onmousedown=s}
@@ -144,124 +143,25 @@ function checkLoginButton(){
 
 function previewLoginIcons() {
     var flag = 0;
-    if (document.getElementById('google_enable').checked)   {
-        flag = 1;
-        if(document.getElementById('oxd_openid_login_default_radio').checked && !document.getElementById('iconwithtext').checked)
-            jQuery("#oxd_login_icon_preview_google").show();
-        if(document.getElementById('oxd_openid_login_custom_radio').checked && !document.getElementById('iconwithtext').checked)
-            jQuery("#oxd_custom_login_icon_preview_google").show();
-        if(document.getElementById('oxd_openid_login_default_radio').checked && document.getElementById('iconwithtext').checked)
-            jQuery("#oxd_login_button_preview_google").show();
-        if(document.getElementById('oxd_openid_login_custom_radio').checked && document.getElementById('iconwithtext').checked)
-            jQuery("#oxd_custom_login_button_preview_google").show();
-    } else if(!document.getElementById('google_enable').checked){
-        jQuery("#oxd_login_icon_preview_google").hide();
-        jQuery("#oxd_custom_login_icon_preview_google").hide();
-        jQuery("#oxd_login_button_preview_google").hide();
-        jQuery("#oxd_custom_login_button_preview_google").hide();
+    customScript.forEach(function(value) {
+        if (document.getElementById(value.value+'_enable').checked) {
+            flag = 1;
+            if(document.getElementById('oxd_openid_login_default_radio').checked && !document.getElementById('iconwithtext').checked)
+                jQuery("#oxd_login_icon_preview_"+value.value).show();
+            if(document.getElementById('oxd_openid_login_custom_radio').checked && !document.getElementById('iconwithtext').checked)
+                jQuery("#oxd_custom_login_icon_preview_"+value.value).show();
+            if(document.getElementById('oxd_openid_login_default_radio').checked && document.getElementById('iconwithtext').checked)
+                jQuery("#oxd_login_button_preview_"+value.value).show();
+            if(document.getElementById('oxd_openid_login_custom_radio').checked && document.getElementById('iconwithtext').checked)
+                jQuery("#oxd_custom_login_button_preview_"+value.value).show();
+        } else if(!document.getElementById(value.value+'_enable').checked){
+            jQuery("#oxd_login_icon_preview_"+value.value).hide();
+            jQuery("#oxd_custom_login_icon_preview_"+value.value).hide();
+            jQuery("#oxd_login_button_preview_"+value.value).hide();
+            jQuery("#oxd_custom_login_button_preview_"+value.value).hide();
+        }
+    });
 
-    }
-
-    if (document.getElementById('facebook_enable').checked) {
-        flag = 1;
-        if(document.getElementById('oxd_openid_login_default_radio').checked && !document.getElementById('iconwithtext').checked)
-            jQuery("#oxd_login_icon_preview_facebook").show();
-        if(document.getElementById('oxd_openid_login_custom_radio').checked && !document.getElementById('iconwithtext').checked)
-            jQuery("#oxd_custom_login_icon_preview_facebook").show();
-        if(document.getElementById('oxd_openid_login_default_radio').checked && document.getElementById('iconwithtext').checked)
-            jQuery("#oxd_login_button_preview_facebook").show();
-        if(document.getElementById('oxd_openid_login_custom_radio').checked && document.getElementById('iconwithtext').checked)
-            jQuery("#oxd_custom_login_button_preview_facebook").show();
-    }else if(!document.getElementById('facebook_enable').checked){
-        jQuery("#oxd_login_icon_preview_facebook").hide();
-        jQuery("#oxd_custom_login_icon_preview_facebook").hide();
-        jQuery("#oxd_login_button_preview_facebook").hide();
-        jQuery("#oxd_custom_login_button_preview_facebook").hide();
-    }
-    if (document.getElementById('linkedin_enable').checked) {
-        flag = 1;
-        if(document.getElementById('oxd_openid_login_default_radio').checked && !document.getElementById('iconwithtext').checked)
-            jQuery("#oxd_login_icon_preview_linkedin").show();
-        if(document.getElementById('oxd_openid_login_custom_radio').checked && !document.getElementById('iconwithtext').checked)
-            jQuery("#oxd_custom_login_icon_preview_linkedin").show();
-        if(document.getElementById('oxd_openid_login_default_radio').checked && document.getElementById('iconwithtext').checked)
-            jQuery("#oxd_login_button_preview_linkedin").show();
-        if(document.getElementById('oxd_openid_login_custom_radio').checked && document.getElementById('iconwithtext').checked)
-            jQuery("#oxd_custom_login_button_preview_linkedin").show();
-    }else if(!document.getElementById('linkedin_enable').checked){
-        jQuery("#oxd_login_icon_preview_linkedin").hide();
-        jQuery("#oxd_custom_login_icon_preview_linkedin").hide();
-        jQuery("#oxd_login_button_preview_linkedin").hide();
-        jQuery("#oxd_custom_login_button_preview_linkedin").hide();
-    }
-    if (document.getElementById('twitter_enable').checked) {
-        flag = 1;
-        if(document.getElementById('oxd_openid_login_default_radio').checked && !document.getElementById('iconwithtext').checked)
-            jQuery("#oxd_login_icon_preview_twitter").show();
-        if(document.getElementById('oxd_openid_login_custom_radio').checked && !document.getElementById('iconwithtext').checked)
-            jQuery("#oxd_custom_login_icon_preview_twitter").show();
-        if(document.getElementById('oxd_openid_login_default_radio').checked && document.getElementById('iconwithtext').checked)
-            jQuery("#oxd_login_button_preview_twitter").show();
-        if(document.getElementById('oxd_openid_login_custom_radio').checked && document.getElementById('iconwithtext').checked)
-            jQuery("#oxd_custom_login_button_preview_twitter").show();
-    }else if(!document.getElementById('twitter_enable').checked){
-        jQuery("#oxd_login_icon_preview_twitter").hide();
-        jQuery("#oxd_custom_login_icon_preview_twitter").hide();
-        jQuery("#oxd_login_button_preview_twitter").hide();
-        jQuery("#oxd_custom_login_button_preview_twitter").hide();
-    }
-
-    if (document.getElementById('U2F_enable').checked) {
-        flag = 1;
-        if(document.getElementById('oxd_openid_login_default_radio').checked && !document.getElementById('iconwithtext').checked)
-            jQuery("#oxd_login_icon_preview_U2F").show();
-        if(document.getElementById('oxd_openid_login_custom_radio').checked && !document.getElementById('iconwithtext').checked)
-            jQuery("#oxd_custom_login_icon_preview_U2F").show();
-        if(document.getElementById('oxd_openid_login_default_radio').checked && document.getElementById('iconwithtext').checked)
-            jQuery("#oxd_login_button_preview_U2F").show();
-        if(document.getElementById('oxd_openid_login_custom_radio').checked && document.getElementById('iconwithtext').checked)
-            jQuery("#oxd_custom_login_button_preview_U2F").show();
-    }else if(!document.getElementById('U2F_enable').checked){
-        jQuery("#oxd_login_icon_preview_U2F").hide();
-        jQuery("#oxd_custom_login_icon_preview_U2F").hide();
-        jQuery("#oxd_login_button_preview_U2F").hide();
-        jQuery("#oxd_custom_login_button_preview_U2F").hide();
-    }
-
-    if (document.getElementById('Duo_enable').checked) {
-        flag = 1;
-        if(document.getElementById('oxd_openid_login_default_radio').checked && !document.getElementById('iconwithtext').checked)
-            jQuery("#oxd_login_icon_preview_Duo").show();
-        if(document.getElementById('oxd_openid_login_custom_radio').checked && !document.getElementById('iconwithtext').checked)
-            jQuery("#oxd_custom_login_icon_preview_Duo").show();
-        if(document.getElementById('oxd_openid_login_default_radio').checked && document.getElementById('iconwithtext').checked)
-            jQuery("#oxd_login_button_preview_Duo").show();
-        if(document.getElementById('oxd_openid_login_custom_radio').checked && document.getElementById('iconwithtext').checked)
-            jQuery("#oxd_custom_login_button_preview_Duo").show();
-    } else if(!document.getElementById('Duo_enable').checked){
-        jQuery("#oxd_login_icon_preview_Duo").hide();
-        jQuery("#oxd_custom_login_icon_preview_Duo").hide();
-        jQuery("#oxd_login_button_preview_Duo").hide();
-        jQuery("#oxd_custom_login_button_preview_Duo").hide();
-    }
-
-
-    if (document.getElementById('Basic_enable').checked) {
-        flag = 1;
-        if(document.getElementById('oxd_openid_login_default_radio').checked && !document.getElementById('iconwithtext').checked)
-            jQuery("#oxd_login_icon_preview_Basic").show();
-        if(document.getElementById('oxd_openid_login_custom_radio').checked && !document.getElementById('iconwithtext').checked)
-            jQuery("#oxd_custom_login_icon_preview_Basic").show();
-        if(document.getElementById('oxd_openid_login_default_radio').checked && document.getElementById('iconwithtext').checked)
-            jQuery("#oxd_login_button_preview_Basic").show();
-        if(document.getElementById('oxd_openid_login_custom_radio').checked && document.getElementById('iconwithtext').checked)
-            jQuery("#oxd_custom_login_button_preview_Basic").show();
-    }else if(!document.getElementById('Basic_enable').checked){
-        jQuery("#oxd_login_icon_preview_Basic").hide();
-        jQuery("#oxd_custom_login_icon_preview_Basic").hide();
-        jQuery("#oxd_login_button_preview_Basic").hide();
-        jQuery("#oxd_custom_login_button_preview_Basic").hide();
-    }
 
     if(flag) {
         jQuery("#no_apps_text").hide();
