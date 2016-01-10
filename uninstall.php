@@ -2,7 +2,6 @@
 	//delete all stored key-value pairs
 	delete_option('oxd_config');
 	delete_option('oxd_id');
-	delete_option('oxd_openid_host_name');
 	delete_option('oxd_openid_new_registration');
 	delete_option('oxd_openid_admin_email');
 	delete_option('oxd_openid_message');

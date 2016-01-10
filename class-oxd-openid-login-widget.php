@@ -220,19 +220,20 @@
 
 		function oxd_openid_end_session() {
 			$config_option = get_option( 'oxd_config' );
-			if(get_option('oxd_id') && get_option('user_oxd_access_token')){
+			if(get_option('oxd_id') && $_SESSION['user_oxd_access_token']){
 				$logout = new Logout();
 				$logout->setRequestOxdId(get_option('oxd_id'));
 				$logout->setRequestPostLogoutRedirectUri($config_option['logout_redirect_uri']);
-				$logout->setRequestIdToken(get_option('user_oxd_access_token'));
+				$logout->setRequestIdToken($_SESSION['user_oxd_access_token']);
 				$logout->request();
 
-				delete_option('user_oxd_id_token');
-				delete_option('user_oxd_access_token');
-
 			}
+
 			if( session_id() ) {
+				unset($_SESSION['user_oxd_access_token']);
+				unset($_SESSION['user_oxd_id_token']);
 				session_destroy();
+
 			}
 		}
 
@@ -259,57 +260,53 @@
 				$http = isset($_SERVER['HTTPS']) && !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? "https://" : "http://";
 				$parts = parse_url($http . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"]);
 				parse_str($parts['query'], $query);
+
+
 				$config_option = get_option( 'oxd_config' );
-
 				$get_tokens_by_code = new Get_tokens_by_code();
-
 				$get_tokens_by_code->setRequestOxdId(get_option('oxd_id'));
 				$get_tokens_by_code->setRequestCode($query['code']);
 				$get_tokens_by_code->setRequestState($query['state']);
 				$get_tokens_by_code->setRequestScopes($config_option["scope"]);
-
 				$get_tokens_by_code->request();
+				$array_data = $get_tokens_by_code->getResponseObject();
+				$_SESSION['user_oxd_id_token']  = $get_tokens_by_code->getResponseIdToken();
+				$_SESSION['user_oxd_access_token']  = $get_tokens_by_code->getResponseAccessToken();
 
-				if(get_option('user_oxd_id_token')){
-					delete_option('user_oxd_id_token');
-					delete_option('user_oxd_access_token');
-				}else{
-					add_option('user_oxd_id_token',$get_tokens_by_code->getResponseIdToken());
-					add_option('user_oxd_access_token',$get_tokens_by_code->getResponseAccessToken());
-				}
 				$get_user_info = new Get_user_info();
 				$get_user_info->setRequestOxdId(get_option('oxd_id'));
-				$get_user_info->setRequestAccessToken(get_option('user_oxd_access_token'));
+				$get_user_info->setRequestAccessToken($_SESSION['user_oxd_access_token']);
 				$get_user_info->request();
-				$am_hosts = '';
-				if(get_option('oxd_openid_gluu_server_url')){
-					$disallowed = array('http://', 'https://');
-					foreach($disallowed as $d) {
-						if(strpos(get_option('oxd_openid_gluu_server_url'), $d) === 0) {
-							$am_hosts = str_replace($d, '', get_option('oxd_openid_gluu_server_url'));
-						}
-					}
-				}
+
 				$user_email = '';
 				if($get_user_info->getResponseEmail() ) {
 					$user_email = $get_user_info->getResponseEmail();
 				}else{
-					$user_email = $get_user_info->getResponsePreferredUsername().'@'.$am_hosts;
+					if($array_data->id_token_claims->email){
+						$user_email = $array_data->id_token_claims->email;
+					}
 				}
 
 				$user_name = $get_user_info->getResponsePreferredUsername();
 				$user_picture = $get_user_info->getResponsePicture();
 				$first_name = '';
 				$last_name = '';
-
+				$user_full_name = '';
 				if($get_user_info->getResponseGivenName() && $get_user_info->getResponseFamilyName()){
-
 					$user_full_name = $get_user_info->getResponseGivenName().' '.$get_user_info->getResponseFamilyName();
 					$first_name = $get_user_info->getResponseGivenName();
 					$last_name = $get_user_info->getResponseFamilyName();
+				}elseif($array_data->id_token_claims->family_name && $array_data->id_token_claims->given_name){
+					$first_name = $array_data->id_token_claims->given_name;
+					$last_name = $array_data->id_token_claims->family_name;
+					if($array_data->id_token_claims->name){
+						$user_full_name = $array_data->id_token_claims->name;
+					}else{
+						$user_full_name = $array_data->id_token_claims->family_name.' '.$array_data->id_token_claims->given_name;
+					}
+
 				}
-				else
-					$user_full_name = $user_name;
+
 				if($get_user_info->getResponsePreferredUsername()){
 					$username = $get_user_info->getResponsePreferredUsername();
 				}

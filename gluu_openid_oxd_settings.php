@@ -1,12 +1,12 @@
 <?php
 
 /**
- * Plugin Name: Gluu oxd login to gluu server
- * Plugin URI: http://gluu.com
- * Description: Allow your users to login with Facebook, LinkedIn, Twitter, Google, Basic, U2F Token etc using customizable buttons.
+ * Plugin Name: Gluu oxd and social login via gluu server
+ * Plugin URI: http://gluu.org
+ * Description: Allow your users to login with Gluu server via Google, Duo, Basic, U2F Token etc using customizable buttons.
  * Version: 1.0
  * Author: Vlad Karapetyan
- * Author URI: http://gluu.com
+ * Author URI: http://gluu.org
  * License: GPL2
  */
 
@@ -99,7 +99,6 @@
 		}
 
 		function oxd_openid_deactivate() {
-			delete_option('oxd_openid_host_name');
 			delete_option('oxd_openid_new_registration');
 			delete_option('oxd_openid_message');
 		}
@@ -203,7 +202,7 @@
 
 				$illegal = "#$%^*()+=[]';,/{}|:<>?~";
 				$illegal = $illegal . '"';
-				if( $this->oxd_openid_check_empty_or_null( $_POST['email'] ) || $this->oxd_openid_check_empty_or_null( $_POST['gluu_server_url'] ) || $this->oxd_openid_check_empty_or_null( $_POST['oxd_host_ip']) || $this->oxd_openid_check_empty_or_null( $_POST['oxd_host_port'] ) ) {
+				if( $this->oxd_openid_check_empty_or_null( $_POST['email'] )  ||  $this->oxd_openid_check_empty_or_null( $_POST['oxd_host_port'] ) ) {
 					update_option( 'oxd_openid_message', 'All the fields are required. Please enter valid entries.');
 					$this->oxd_openid_show_error_message();
 					return;
@@ -212,22 +211,9 @@
 					update_option( 'oxd_openid_message', 'Need to choose anyone can register checkbox.');
 					$this->oxd_openid_show_error_message();
 					return;
-				} else if( !$_POST['app_type']){
-
-					update_option( 'oxd_openid_message', 'Application type can not be empty.');
-					$this->oxd_openid_show_error_message();
-					return;
 				}else if( (int)$_POST['oxd_host_port']  > 65535 && (int)$_POST['oxd_host_port']  < 0){
 
 					update_option( 'oxd_openid_message', 'Enter your oxd host port (Min. number 0, Max. number 65535)');
-					$this->oxd_openid_show_error_message();
-					return;
-				}else if( filter_var($_POST['oxd_host_ip'], FILTER_VALIDATE_IP) === false){
-					update_option( 'oxd_openid_message', $_POST['oxd_host_ip'].'is not ip. Please valid ip.');
-					$this->oxd_openid_show_error_message();
-					return;
-				}else if(filter_var($_POST['gluu_server_url'], FILTER_VALIDATE_URL) === false  ){
-					update_option( 'oxd_openid_message', $_POST['gluu_server_url']. 'is not url address.');
 					$this->oxd_openid_show_error_message();
 					return;
 				} else if(strpbrk($_POST['email'],$illegal)) {
@@ -237,20 +223,16 @@
 				} else {
 					$email = $_POST['email'];
 					$oxd_host_port = $_POST['oxd_host_port'];
-					$oxd_host_ip = $_POST['oxd_host_ip'];
-					$gluu_server_url = $_POST['gluu_server_url'];
+					$oxd_host_ip = '127.0.0.1';
 				}
 				update_option( 'users_can_register', $_POST['users_can_register'] );
 				update_option( 'default_role', $_POST['default_role'] );
 				update_option( 'oxd_openid_admin_email', $email );
 				update_option( 'oxd_openid_oxd_ip', $oxd_host_ip );
 				update_option( 'oxd_openid_oxd_port', $oxd_host_port );
-				update_option( 'oxd_openid_gluu_server_url', $gluu_server_url );
-				update_option( 'oxd_openid_host_name', $gluu_server_url );
 				$config_option = array(
 						"oxd_host_ip" => $oxd_host_ip,
 						"oxd_host_port" =>$oxd_host_port,
-						"gluu_server_url" =>$gluu_server_url,
 						"authorization_redirect_uri" => home_url().'/wp-login.php?option=oxdOpenId',
 						"logout_redirect_uri" => wp_logout_url(),
 						"scope" => [ "openid", "profile"],
@@ -259,8 +241,7 @@
 						"response_types" => ["code"],
 						"grant_types" =>"authorization_code",
 						"acr_values" => [],
-						"am_host" =>"",
-						"migrate_users"=>''
+						"am_host" =>""
 				);
 				update_option( 'oxd_config', $config_option );
 				$register_site = new Register_site();
@@ -269,8 +250,13 @@
 				$register_site->setRequestRedirectUris($config_option['redirect_uris']);
 				$register_site->setRequestLogoutRedirectUri($config_option['logout_redirect_uri']);
 				$register_site->setRequestContacts([$email]);
-				$register_site->setRequestApplicationType($_POST['app_type']);
-				$register_site->request();
+				$register_site->setRequestApplicationType('web');
+				$status = $register_site->request();
+				if(!$status['status']){
+					update_option( 'oxd_openid_message', $status['message']);
+					$this->oxd_openid_show_error_message();
+					return;
+				}
 				if($register_site->getResponseOxdId()){
 					if(get_option('oxd_id')){
 						update_option( 'oxd_id', $register_site->getResponseOxdId() );

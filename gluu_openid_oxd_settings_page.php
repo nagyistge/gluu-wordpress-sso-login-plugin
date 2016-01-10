@@ -21,9 +21,9 @@ function oxd_register_openid() {
     <div id="tab">
         <h2 class="nav-tab-wrapper">
             <?php if(!is_oxd_registered()) { ?>
-                <a class="nav-tab <?php echo $active_tab == 'register' ? 'nav-tab-active' : ''; ?>" href="<?php echo add_query_arg( array('tab' => 'register'), $_SERVER['REQUEST_URI'] ); ?>">Gluu and oxd config</a>
+                <a class="nav-tab <?php echo $active_tab == 'register' ? 'nav-tab-active' : ''; ?>" href="<?php echo add_query_arg( array('tab' => 'register'), $_SERVER['REQUEST_URI'] ); ?>">General</a>
             <?php } ?>
-            <a class="nav-tab <?php echo $active_tab == 'login_config' ? 'nav-tab-active' : ''; ?>" href="<?php echo add_query_arg( array('tab' => 'login_config'), $_SERVER['REQUEST_URI'] ); ?>">Oxd config</a>
+            <a class="nav-tab <?php echo $active_tab == 'login_config' ? 'nav-tab-active' : ''; ?>" href="<?php echo add_query_arg( array('tab' => 'login_config'), $_SERVER['REQUEST_URI'] ); ?>">Scopes and custom scripts</a>
             <a class="nav-tab <?php echo $active_tab == 'login' ? 'nav-tab-active' : ''; ?>" href="<?php echo add_query_arg( array('tab' => 'login'), $_SERVER['REQUEST_URI'] ); ?>">Gluu and social login config</a>
             <a class="nav-tab <?php echo $active_tab == 'shortcode' ? 'nav-tab-active' : ''; ?>" href="<?php echo add_query_arg( array('tab' => 'shortcode'), $_SERVER['REQUEST_URI'] ); ?>">Shortcode</a>
             <a class="nav-tab <?php echo $active_tab == 'help' ? 'nav-tab-active' : ''; ?>" href="<?php echo add_query_arg( array('tab' => 'help'), $_SERVER['REQUEST_URI'] ); ?>">Help & Troubleshooting</a>
@@ -82,6 +82,7 @@ function oxd_openid_show_new_registration_page() {
                                     <input name="users_can_register" type="checkbox" id="users_can_register" <?php if(get_option('users_can_register')){ echo "checked";} ?> value="1">
                                    <b>Anyone can register:</b> </label>
                             </fieldset>
+                            <br/>
                         </td>
                     </tr>
                     <tr>
@@ -94,40 +95,14 @@ function oxd_openid_show_new_registration_page() {
                                 <option <?php if(get_option('default_role') == "editor"){ echo "selected='selected'";} ?> value="editor">Editor</option>
                                 <option <?php if(get_option('default_role') == "administrator"){ echo "selected='selected'";} ?> value="administrator">Administrator</option>
                             </select>
+                            <br/><br/>
                         </td>
                     </tr>
                     <tr>
-                        <td><label for="default_role"><b>Application Type:</b></label></td>
-                        <td>
-                            <select name="app_type" id="application_type">
-                                <option value="web">Web</option>
-                                <option value="native">Native</option>
-                            </select>
-
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><b><font color="#FF0000">*</font>Email:</b></td>
+                        <td><b><font color="#FF0000">*</font>Admin Email:</b></td>
                         <td><input class="oxd_openid_table_textbox" type="email" name="email"
                             required placeholder="person@example.com"
                             value="<?php echo $current_user->user_email;?>" /></td>
-                    </tr>
-                    <tr>
-                        <td><b><font color="#FF0000">*</font>Gluu server url:</b>
-
-                        </td>
-                        <td>
-                            <br/>
-                            <input class="oxd_openid_table_textbox" required type="url" name="gluu_server_url" placeholder="Please enter gluu server url (for example https://ce-dev.gluu.org)" />
-                            <p style="color:red" class="description">It must be the same with oxd server's in oxd-conf.json file's with parameter "op_host".</p>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><b><font color="#FF0000">*</font>Oxd host ip:</b></td>
-                        <td>
-                            <br/>
-                            <input class="oxd_openid_table_textbox" required type="text" name="oxd_host_ip" value="127.0.0.1" placeholder="Please enter oxd host ip address (for example 127.0.0.1) ." />
-                        </td>
                     </tr>
                     <tr>
                         <td><b><font color="#FF0000">*</font>Oxd host port:</b></td>
@@ -175,7 +150,7 @@ function oxd_openid_apps_config() {
             </table>
             <table>
                 <h3>Select Apps</h3>
-                <p>Select applications to enable social login</p>
+                <p>Select gluu applications to enable login</p>
                 <div class="mess_red">
                     If you have not enable custom script in gluu server, please go to Your gluu server tab Manage Custom Scripts and enable Custom Scripts.
                 </div>
@@ -217,7 +192,7 @@ function oxd_openid_apps_config() {
                 </tr>
                 <tr>
                     <td class="oxd_openid_table_td_checkbox">
-                        <input type="radio"    name="oxd_openid_login_theme" value="circle" onclick="checkLoginButton();oxdLoginPreview(document.getElementById('oxd_login_icon_size').value ,'circle',setLoginCustomTheme(),document.getElementById('oxd_login_icon_custom_color').value,document.getElementById('oxd_login_icon_space').value)"
+                        <input type="radio" name="oxd_openid_login_theme" value="circle" onclick="checkLoginButton();oxdLoginPreview(document.getElementById('oxd_login_icon_size').value ,'circle',setLoginCustomTheme(),document.getElementById('oxd_login_icon_custom_color').value,document.getElementById('oxd_login_icon_space').value)"
                             <?php if(!is_oxd_registered()) echo 'disabled'?>
                                     <?php checked( get_option('oxd_openid_login_theme') == 'circle' );?> />Round
                         <span style="margin-left:106px; display: none">
@@ -547,171 +522,153 @@ function oxd_openid_login_config_info(){
         <?php } ?>
 
         <div>
-            <div class="about">
-                <img src="<?php echo plugins_url('includes/images/logo.png', __FILE__)?>" />
-                    <h1>Oxd server config</h1>
-            </div>
+
             <form action="" method="post">
                 <input type="hidden" name="option" value="oxd_openid_config_info_hidden" />
-                <table class="form-table">
-                    <tbody>
-                        <tr>
-                            <th scope="row">
-                                Oxd Host ip
-                            </th>
-                            <td>
-                                <input <?php  echo 'disabled'?> type="text" placeholder="Please enter oxd host ip address (for example 127.0.0.1) ." name="oxd_host_ip" value="<?php echo esc_attr($options['oxd_host_ip']); ?>" size="100%">
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row">
-                                Oxd Port number
-                            </th>
-                            <td>
-                                <input <?php  echo 'disabled'?> type="text" placeholder="Please enter oxd open port (for example 8099)." name="oxd_host_port" value="<?php echo esc_attr($options['oxd_host_port']); ?>" size="100%">
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row">
-                                Gluu Server Url
-                            </th>
-                            <td>
-                                <input <?php echo 'disabled'?> type="text" placeholder="Please enter gluu server url (for example https://ce-dev.gluu.org) ." name="gluu_server_url" value="<?php echo esc_attr($options['gluu_server_url']); ?>" size="100%" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row">
-                                Your site oxd id
-                            </th>
-                            <td>
-                                <input <?php echo 'disabled'?> type="text" name="oxd_id" value="<?php echo get_option('oxd_id'); ?>" size="100%" />
-                            </td>
-                        </tr>
-                        <tr  style="display: none">
-                            <th scope="row">
-                                Response Types
-                            </th>
-                            <td>
-                                <div >
-                                    <div>
-                                        <input <?php if(!is_oxd_registered()) echo 'disabled'?> type="checkbox" name="response_types[]" <?php if($options && in_array("code", $options['response_types'])){ echo "checked";} ?> id="code" value="code">
-                                        <label  for="code">Code</label>
-                                        <input <?php if(!is_oxd_registered()) echo 'disabled'?> type="checkbox" name="response_types[]" <?php if($options && in_array("id_token", $options['response_types'])){ echo "checked";} ?> id="id_token" value="id_token">
-                                        <label  for="id_token">Id_Token</label>
-                                        <input <?php if(!is_oxd_registered()) echo 'disabled'?> type="checkbox" name="response_types[]" <?php if($options && in_array("token", $options['response_types'])){ echo "checked";} ?> id="token" value="token">
-                                        <label  for="token">Token</label>
+
+                        <fieldset style="border: 2px solid #53cc6b;">
+                            <legend><div class="about">
+                                    <img style="width: 45px; height: 45px" src="<?php echo plugins_url('includes/images/logo.png', __FILE__)?>" />server config
+                                </div></legend>
+                            <table class="form-table" style="margin-left: 30px">
+                                <tbody>
+                            <tr>
+                                <th scope="row">
+                                    Your site oxd id
+                                </th>
+                                <td>
+                                    <input <?php echo 'disabled'?> type="text" name="oxd_id" value="<?php echo get_option('oxd_id'); ?>" size="100%" />
+                                </td>
+                            </tr>
+                                </tbody></table>
+                        </fieldset>
+                    <fieldset style="border: 2px solid #53cc6b;">
+                        <legend><div class="about">
+                                <img style="width: 65px; height: 45px" src="<?php echo plugins_url('includes/images/gl.png', __FILE__)?>" />server config
+                            </div></legend>
+                        <table style="margin-left: 30px" class="form-table">
+                            <tbody>
+
+                            <tr>
+                                <th scope="row">
+                                    Scopes
+                                </th>
+                                <?php $get_scopes = get_option('oxd_openid_scops');
+                                ?>
+                                <td>
+                                    <div >
+                                        <div>
+                                            <?php foreach($get_scopes as $scop) :?>
+                                                <input <?php if(!is_oxd_registered()) echo 'disabled'?> type="checkbox" name="scope[]" <?php if($options && in_array($scop, $options['scope'])){ echo "checked";} ?> id="<?php echo $scop;?>" value="<?php echo $scop;?>">
+                                                <label  for="<?php echo $scop;?>"><?php echo $scop;?></label>
+                                            <?php endforeach;?>
+                                        </div>
                                     </div>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row">
-                                Scopes
-                            </th>
-                            <?php $get_scopes = get_option('oxd_openid_scops');
-                            ?>
-                            <td>
-                                <div >
-                                    <div>
-                                        <?php foreach($get_scopes as $scop) :?>
-                                            <input <?php if(!is_oxd_registered()) echo 'disabled'?> type="checkbox" name="scope[]" <?php if($options && in_array($scop, $options['scope'])){ echo "checked";} ?> id="<?php echo $scop;?>" value="<?php echo $scop;?>">
-                                            <label  for="<?php echo $scop;?>"><?php echo $scop;?></label>
-                                        <?php endforeach;?>
+                                </td>
+                            </tr>
+                            <tr style="display: none">
+                                <th scope="row">
+
+                                </th>
+                                <td>
+                                    <div class="mess_red">
+                                        You can modificate current scopes or add new custom scope in your Gluu Server - OpenID Connect - Scopes.
                                     </div>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row">
-
-                            </th>
-                            <td>
-                                <div class="mess_red">
-                                    You can modificate current scopes or add new custom scope in your Gluu Server - OpenID Connect - Scopes.
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row">
-                                Add multiple Scope
-                            </th>
-                            <td>
-                                <div >
-                                    <div id="p_scents">
-                                        <input <?php if(!is_oxd_registered()) echo 'disabled'?> type="button" id="add_new_scope" value="Add row">
-                                        <p>
-                                        <input <?php if(!is_oxd_registered()) echo 'disabled'?> type="text" name="new_scope[]" placeholder="Input scope name" />
-                                        </p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    Add multiple Scope
+                                </th>
+                                <td>
+                                    <div >
+                                        <div id="p_scents">
+                                            <input <?php if(!is_oxd_registered()) echo 'disabled'?> type="button" id="add_new_scope" value="Add row">
+                                            <p>
+                                                <input <?php if(!is_oxd_registered()) echo 'disabled'?> type="text" name="new_scope[]" placeholder="Input scope name" />
+                                            </p>
+                                        </div>
                                     </div>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row">
+                                </td>
+                            </tr>
+                            <tr style="display: none">
+                                <th scope="row">
 
-                            </th>
-                            <td>
-                                <div class="mess_red">
-                                    You can modificate current scripts or add new custom scripts in your Gluu Server - Configuration - Menage Custom Scripts.
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row">
-                                <p>Add multiple custom scripts</p>
-                                <p style="color:red" class="description">Necessary to fill the hole row</p>
-                            </th>
-                            <td>
-                                <div >
-
-                                    <input <?php if(!is_oxd_registered()) echo 'disabled'?> type="button" id="add_new_suctom_script"  value="Add row"/>
-                                    <input type="hidden" name="count_scripts" value="1" id="count_scripts">
-                                    <div id="p_scents_script">
-                                        <p>
-                                            <input <?php if(!is_oxd_registered()) echo 'disabled'?> type="text" style="margin-right: 5px " name="new_custom_script_name_1" size="30" placeholder="Input name (example Google+)" />
-                                            <input <?php if(!is_oxd_registered()) echo 'disabled'?> type="text" style="margin-right: 5px " name="new_custom_script_value_1" size="40" placeholder="Input name in gluu server (example gplus)" />
-                                            <input type="hidden" name="image_url_1" id="image_url_1" class="regular-text">
-                                            <input <?php if(!is_oxd_registered()) echo 'disabled'?> type="button" name="upload-btn" id="upload-btn_1" onclick="upload_this(1)" class="button-secondary" value="Upload app image (120x120) ">
-                                        </p>
+                                </th>
+                                <td>
+                                    <div class="mess_red">
+                                        You can modificate current scripts or add new custom scripts in your Gluu Server - Configuration - Menage Custom Scripts.
                                     </div>
-                                </div>
-                            </td>
-                        </tr>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    <p>Add multiple custom scripts</p>
+                                    <p style="color:red" class="description">Necessary to fill the hole row</p>
+                                </th>
+                                <td>
+                                    <div >
 
-                    </tbody>
-                </table>
-                <div style="border-radius: 10px;  background-color: #01ffa0; width: 100%;height: 30px; font-size: 30px; wcursor: pointer; text-align: center;">
-                    <a style="font-size: 20px; color: black; font-weight: bold; cursor: pointer; text-align: center;" id="show_script_table">Show or hide all custom scripts for delete</a>
-                </div>
-                <br/>
-                <table id="custom_script_table" class="form-table" style="display: none; text-align: center">
-                    <tr>
-                        <th> <h3>N</h3> </th>
-                        <th><h3>Name</h3></th>
-                        <th><h3>Name in gluu server</h3></th>
-                        <th><h3>Image</h3></th>
-                        <th><h3>Delete</h3></th>
-                    </tr>
-                    <?php
-                    $custom_scripts = get_option('oxd_openid_custom_scripts');
-                    $n = 0;
-                    foreach($custom_scripts as $custom_script){
-                        $n++;
-                        ?>
-                        <tr>
-                            <td><?php echo $n;?></td>
-                            <td><?php echo $custom_script['name'];?></td>
-                            <td><?php echo $custom_script['value'];?></td>
-                            <td><img src="<?php echo $custom_script['image'];?>" width="40px" height="40px"/></td>
-                            <td><input type="button" onclick="delete_custom_script('<?php echo $custom_script['value'];?>')" class="button button-primary button-large" <?php if(!is_oxd_registered()) echo 'disabled'?> value="Delete" name="set_oxd_config" /></td>
-                        </tr>
-                        <?php
-                    }
-                    ?>
+                                        <input <?php if(!is_oxd_registered()) echo 'disabled'?> type="button" id="add_new_suctom_script"  value="Add row"/>
+                                        <input type="hidden" name="count_scripts" value="1" id="count_scripts">
+                                        <div id="p_scents_script">
+                                            <p>
+                                                <input <?php if(!is_oxd_registered()) echo 'disabled'?> type="text" style="margin-right: 5px " name="new_custom_script_name_1" size="30" placeholder="Input name (example Google+)" />
+                                                <input <?php if(!is_oxd_registered()) echo 'disabled'?> type="text" style="margin-right: 5px " name="new_custom_script_value_1" size="40" placeholder="Input name in gluu server (example gplus)" />
+                                                <input type="hidden" name="image_url_1" id="image_url_1" class="regular-text">
+                                                <input <?php if(!is_oxd_registered()) echo 'disabled'?> type="button" name="upload-btn" id="upload-btn_1" onclick="upload_this(1)" class="button-secondary" value="Upload app image (120x120) ">
+                                            </p>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
 
-                </table>
-                <br/>
-                <input type="submit" class="button button-primary button-large" <?php if(!is_oxd_registered()) echo 'disabled'?> value="Save" name="set_oxd_config" />
+                            </tbody>
+                        </table>
+                        <table style="margin-left: 30px" class="form-table">
+                            <tbody>
+                            <tr>
+                                <th></th>
+                                <td>
+                                    <div style="border-radius: 10px;  background-color: #01ffa0; width: 95%;height: 45px; font-size: 30px; wcursor: pointer; text-align: center;">
+                                        <a style="width:95%;font-size: 20px; color: black; font-weight: bold; cursor: pointer; text-align: center;" id="show_script_table">Show or hide all custom scripts for delete</a>
+                                    </div>
+                                    <br/>
+                                    <table id="custom_script_table" class="form-table" style="width:95%;display: none; text-align: center">
+                                        <tr>
+                                            <th> <h3>N</h3> </th>
+                                            <th><h3>Name</h3></th>
+                                            <th><h3>Name in gluu server</h3></th>
+                                            <th><h3>Image</h3></th>
+                                            <th><h3>Delete</h3></th>
+                                        </tr>
+                                        <?php
+                                        $custom_scripts = get_option('oxd_openid_custom_scripts');
+                                        $n = 0;
+                                        foreach($custom_scripts as $custom_script){
+                                            $n++;
+                                            ?>
+                                            <tr>
+                                                <td><?php echo $n;?></td>
+                                                <td><?php echo $custom_script['name'];?></td>
+                                                <td><?php echo $custom_script['value'];?></td>
+                                                <td><img src="<?php echo $custom_script['image'];?>" width="40px" height="40px"/></td>
+                                                <td><input type="button" onclick="delete_custom_script('<?php echo $custom_script['value'];?>')" class="button button-primary button-large" <?php if(!is_oxd_registered()) echo 'disabled'?> value="Delete" name="set_oxd_config" /></td>
+                                            </tr>
+                                            <?php
+                                        }
+                                        ?>
+
+                                    </table>
+                                    <br/>
+                                </td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+                    </fieldset>
+                <br/><br/><br/>
+                <input style="width: 100px" type="submit" class="button button-primary button-large" <?php if(!is_oxd_registered()) echo 'disabled'?> value="Save" name="set_oxd_config" />
             </form>
         </div>
 	</div>
