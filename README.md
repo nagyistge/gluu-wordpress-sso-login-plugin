@@ -11,7 +11,7 @@
         <div class="">
             <div class="pad group">
                 <div class="page group">
-                   <img src="https://github.com/GluuFederation/gluu-wordpress-oxd-login-plugin/blob/master/plugin.png">
+                   <img src="https://github.com/GluuFederation/gluu-wordpress-oxd-login-plugin/blob/master/plugin.jpg">
                    <img src="https://github.com/GluuFederation/gluu-wordpress-oxd-login-plugin/blob/master/docu/1.png">
                    <img src="https://github.com/GluuFederation/gluu-wordpress-oxd-login-plugin/blob/master/docu/2.png">
                    <img src="https://github.com/GluuFederation/gluu-wordpress-oxd-login-plugin/blob/master/docu/3.png">
