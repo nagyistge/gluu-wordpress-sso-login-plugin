@@ -3,10 +3,11 @@
 	include_once dirname( __FILE__ ) . '/oxd-rp/Get_tokens_by_code.php';
 	include_once dirname( __FILE__ ) . '/oxd-rp/Get_user_info.php';
 	include_once dirname( __FILE__ ) . '/oxd-rp/Logout.php';
+
 	if(is_oxd_registered()) {
-
-		/*  Login Widget */
-
+		/*
+		 * Login Widget
+		 */
 		class oxd_openid_login_wid extends WP_Widget {
 
 			public function __construct() {
@@ -221,114 +222,264 @@
 		function oxd_openid_end_session() {
 			$config_option = get_option( 'oxd_config' );
 			if(get_option('oxd_id') && $_SESSION['user_oxd_access_token']){
+				$conf = get_option('oxd_config');
+				if(get_option('oxd_id')){
+					if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+						if(!exec('netstat -aon |find/i "listening" |find "'.$conf['oxd_host_port'].'"')){
+							$startDir = plugin_dir_path( __FILE__ ).'oxd-server/bin';
+							chdir($startDir);
+							$fileName = 'oxd-start.bat';
+							exec($fileName);
+						}
+					} else {
+						if(!exec('netstat -tulpn | grep :'.$conf['oxd_host_port'])){
+							$startDir = plugin_dir_path( __FILE__ ).'oxd-server/bin';
+							chdir($startDir);
+							$fileName = './oxd-start.sh';
+							exec($fileName);
+						}
+					}
+				}
 				$logout = new Logout();
 				$logout->setRequestOxdId(get_option('oxd_id'));
 				$logout->setRequestPostLogoutRedirectUri($config_option['logout_redirect_uri']);
 				$logout->setRequestIdToken($_SESSION['user_oxd_access_token']);
 				$logout->request();
-
 			}
-
 			if( session_id() ) {
 				unset($_SESSION['user_oxd_access_token']);
 				unset($_SESSION['user_oxd_id_token']);
 				session_destroy();
-
 			}
 		}
 
 		function oxd_openid_login_validate(){
 			if( isset( $_REQUEST['option'] ) and strpos( $_REQUEST['option'], 'getOxdSocialLogin' ) !== false ) {
-
 				$http = isset($_SERVER['HTTPS']) && !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? "https://" : "http://";
-
 				$parts = parse_url($http . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"]);
 				parse_str($parts['query'], $query);
-
 				$conf = get_option('oxd_config');
-
+				if(get_option('oxd_id')){
+					if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+						if(!exec('netstat -aon |find/i "listening" |find "'.$conf['oxd_host_port'].'"')){
+							$startDir = plugin_dir_path( __FILE__ ).'oxd-server/bin';
+							chdir($startDir);
+							$fileName = 'oxd-start.bat';
+							exec($fileName);
+						}
+					} else {
+						if(!exec('netstat -tulpn | grep :'.$conf['oxd_host_port'])){
+							$startDir = plugin_dir_path( __FILE__ ).'oxd-server/bin';
+							chdir($startDir);
+							$fileName = './oxd-start.sh';
+							exec($fileName);
+						}
+					}
+				}
 				$get_authorization_url = new Get_authorization_url();
 				$get_authorization_url->setRequestOxdId(get_option('oxd_id'));
 				$get_authorization_url->setRequestAcrValues([$_REQUEST['app_name']]);
 				$get_authorization_url->request();
-				$url = str_replace($conf['authorization_redirect_uri'].'#',$conf['authorization_redirect_uri'],$get_authorization_url->getResponseAuthorizationUrl());
-				wp_redirect( $url );
+				wp_redirect( $get_authorization_url->getResponseAuthorizationUrl() );
 				exit;
 			}
-
 			if(isset( $_REQUEST['option'] ) and strpos( $_REQUEST['option'], 'oxdOpenId' ) !== false ){
 				$http = isset($_SERVER['HTTPS']) && !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? "https://" : "http://";
 				$parts = parse_url($http . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"]);
 				parse_str($parts['query'], $query);
 
-
 				$config_option = get_option( 'oxd_config' );
+				$conf = get_option('oxd_config');
+				if(get_option('oxd_id')){
+					if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+						if(!exec('netstat -aon |find/i "listening" |find "'.$conf['oxd_host_port'].'"')){
+							$startDir = plugin_dir_path( __FILE__ ).'oxd-server/bin';
+							chdir($startDir);
+							$fileName = 'oxd-start.bat';
+							exec($fileName);
+						}
+					} else {
+						if(!exec('netstat -tulpn | grep :'.$conf['oxd_host_port'])){
+							$startDir = plugin_dir_path( __FILE__ ).'oxd-server/bin';
+							chdir($startDir);
+							$fileName = './oxd-start.sh';
+							exec($fileName);
+						}
+					}
+				}
 				$get_tokens_by_code = new Get_tokens_by_code();
 				$get_tokens_by_code->setRequestOxdId(get_option('oxd_id'));
-				$get_tokens_by_code->setRequestCode($query['code']);
-				$get_tokens_by_code->setRequestState($query['state']);
+				$get_tokens_by_code->setRequestCode($_REQUEST['code']);
+				$get_tokens_by_code->setRequestState($_REQUEST['state']);
 				$get_tokens_by_code->setRequestScopes($config_option["scope"]);
 				$get_tokens_by_code->request();
-				$array_data = $get_tokens_by_code->getResponseObject();
+				$get_tokens_by_code_array = $get_tokens_by_code->getResponseObject()->data->id_token_claims;
 				$_SESSION['user_oxd_id_token']  = $get_tokens_by_code->getResponseIdToken();
 				$_SESSION['user_oxd_access_token']  = $get_tokens_by_code->getResponseAccessToken();
-
 				$get_user_info = new Get_user_info();
 				$get_user_info->setRequestOxdId(get_option('oxd_id'));
 				$get_user_info->setRequestAccessToken($_SESSION['user_oxd_access_token']);
 				$get_user_info->request();
+				$get_user_info_array = $get_user_info->getResponseObject()->data->claims;
 
-				$user_email = '';
-				if($get_user_info->getResponseEmail() ) {
-					$user_email = $get_user_info->getResponseEmail();
-				}else{
-					if($array_data->id_token_claims->email){
-						$user_email = $array_data->id_token_claims->email;
-					}
+				$reg_first_name = '';
+				$reg_last_name = '';
+				$reg_email = '';
+				$reg_avatar = '';
+				$reg_display_name = '';
+				$reg_nikname = '';
+				$reg_website = '';
+				$reg_middle_name = '';
+				$reg_country = '';
+				$reg_city = '';
+				$reg_region = '';
+				$reg_gender = '';
+				$reg_postal_code = '';
+				$reg_fax = '';
+				$reg_home_phone_number = '';
+				$reg_phone_mobile_number = '';
+				$reg_street_address = '';
+				$reg_birthdate = '';
+				if($get_user_info_array->website[0]){
+					$reg_website = $get_user_info_array->website[0];
+				}elseif($get_tokens_by_code_array->website[0]){
+					$reg_website = $get_tokens_by_code_array->website[0];
 				}
-
-				$user_name = $get_user_info->getResponsePreferredUsername();
-				$user_picture = $get_user_info->getResponsePicture();
-				$first_name = '';
-				$last_name = '';
-				$user_full_name = '';
-				if($get_user_info->getResponseGivenName() && $get_user_info->getResponseFamilyName()){
-					$user_full_name = $get_user_info->getResponseGivenName().' '.$get_user_info->getResponseFamilyName();
-					$first_name = $get_user_info->getResponseGivenName();
-					$last_name = $get_user_info->getResponseFamilyName();
-				}elseif($array_data->id_token_claims->family_name && $array_data->id_token_claims->given_name){
-					$first_name = $array_data->id_token_claims->given_name;
-					$last_name = $array_data->id_token_claims->family_name;
-					if($array_data->id_token_claims->name){
-						$user_full_name = $array_data->id_token_claims->name;
+				if($get_user_info_array->nickname[0]){
+					$reg_nikname = $get_user_info_array->nickname[0];
+				}elseif($get_tokens_by_code_array->nickname[0]){
+					$reg_nikname = $get_tokens_by_code_array->nickname[0];
+				}
+				if($get_user_info_array->name[0]){
+					$reg_display_name = $get_user_info_array->name[0];
+				}elseif($get_tokens_by_code_array->name[0]){
+					$reg_display_name = $get_tokens_by_code_array->name[0];
+				}
+				if($get_user_info_array->given_name[0]){
+					$reg_first_name = $get_user_info_array->given_name[0];
+				}elseif($get_tokens_by_code_array->given_name[0]){
+					$reg_first_name = $get_tokens_by_code_array->given_name[0];
+				}
+				if($get_user_info_array->family_name[0]){
+					$reg_last_name = $get_user_info_array->family_name[0];
+				}elseif($get_tokens_by_code_array->family_name[0]){
+					$reg_last_name = $get_tokens_by_code_array->family_name[0];
+				}
+				if($get_user_info_array->middle_name[0]){
+					$reg_middle_name = $get_user_info_array->middle_name[0];
+				}elseif($get_tokens_by_code_array->middle_name[0]){
+					$reg_middle_name = $get_tokens_by_code_array->middle_name[0];
+				}
+				if($get_user_info_array->email[0]){
+					$reg_email = $get_user_info_array->email[0];
+				}elseif($get_tokens_by_code_array->email[0]){
+					$reg_email = $get_tokens_by_code_array->email[0];
+				}
+				if($get_user_info_array->country[0]){
+					$reg_country = $get_user_info_array->country[0];
+				}elseif($get_tokens_by_code_array->country[0]){
+					$reg_country = $get_tokens_by_code_array->country[0];
+				}
+				if($get_user_info_array->gender[0]){
+					if($get_user_info_array->gender[0] == 'male'){
+						$reg_gender = '1';
 					}else{
-						$user_full_name = $array_data->id_token_claims->family_name.' '.$array_data->id_token_claims->given_name;
+						$reg_gender = '2';
 					}
 
+				}elseif($get_tokens_by_code_array->gender[0]){
+					if($get_tokens_by_code_array->gender[0] == 'male'){
+						$reg_gender = '1';
+					}else{
+						$reg_gender = '2';
+					}
+				}
+				if($get_user_info_array->locality[0]){
+					$reg_city = $get_user_info_array->locality[0];
+				}elseif($get_tokens_by_code_array->locality[0]){
+					$reg_city = $get_tokens_by_code_array->locality[0];
+				}
+				if($get_user_info_array->postal_code[0]){
+					$reg_postal_code = $get_user_info_array->postal_code[0];
+				}elseif($get_tokens_by_code_array->postal_code[0]){
+					$reg_postal_code = $get_tokens_by_code_array->postal_code[0];
+				}
+				if($get_user_info_array->phone_number[0]){
+					$reg_home_phone_number = $get_user_info_array->phone_number[0];
+				}elseif($get_tokens_by_code_array->phone_number[0]){
+					$reg_home_phone_number = $get_tokens_by_code_array->phone_number[0];
+				}
+				if($get_user_info_array->phone_mobile_number[0]){
+					$reg_phone_mobile_number = $get_user_info_array->phone_mobile_number[0];
+				}elseif($get_tokens_by_code_array->phone_mobile_number[0]){
+					$reg_phone_mobile_number = $get_tokens_by_code_array->phone_mobile_number[0];
+				}
+				if($get_user_info_array->picture[0]){
+					$reg_avatar = $get_user_info_array->picture[0];
+				}elseif($get_tokens_by_code_array->picture[0]){
+					$reg_avatar = $get_tokens_by_code_array->picture[0];
+				}
+				if($get_user_info_array->street_address[0]){
+					$reg_street_address = $get_user_info_array->street_address[0];
+				}elseif($get_tokens_by_code_array->street_address[0]){
+					$reg_street_address = $get_tokens_by_code_array->street_address[0];
+				}
+				if($get_user_info_array->birthdate[0]){
+					$reg_birthdate = $get_user_info_array->birthdate[0];
+				}elseif($get_tokens_by_code_array->birthdate[0]){
+					$reg_birthdate = $get_tokens_by_code_array->birthdate[0];
+				}
+				if($get_user_info_array->region[0]){
+					$reg_region = $get_user_info_array->region[0];
+				}elseif($get_tokens_by_code_array->region[0]){
+					$reg_region = $get_tokens_by_code_array->region[0];
 				}
 
+				$username = '';
 				if($get_user_info->getResponsePreferredUsername()){
 					$username = $get_user_info->getResponsePreferredUsername();
 				}
-				elseif(strcmp($user_name, $user_full_name)){
-					$email_split = explode("@", $user_email);
+				else {
+					$email_split = explode("@", $reg_email);
 					$username = $email_split[0];
-				} else {
-					$username = $user_name;
 				}
-				if( $user_email ) {
-					if( email_exists( $user_email ) ) {
-						$user 	= get_user_by('email', $user_email );
+				if( $reg_email ) {
+					if( email_exists( $reg_email ) ) {
+						$user 	= get_user_by('email', $reg_email );
 						$user_id 	= $user->ID;
-						if(get_option('oxdOpenId_gluu_login_avatar') && isset($user_picture))
-							update_user_meta($user_id, 'oxdOpenId_user_avatar', $user_picture);
+						wp_update_user(
+								array(
+										'ID' => $user_id,
+										'user_login'  =>  $username,
+										'user_nicename'  =>  $reg_nikname,
+										'user_email'    =>  $reg_email,
+										'display_name' => $reg_display_name,
+										'first_name' => $reg_first_name,
+										'last_name' => $reg_last_name,
+										'user_url' => $reg_website,
+								)
+						);
+						if(get_option('oxdOpenId_gluu_login_avatar') && isset($reg_avatar))
+						update_user_meta($user_id, 'oxdOpenId_user_avatar', $reg_avatar);
 						do_action( 'wp_login', $user->user_login, $user );
 						wp_set_auth_cookie( $user_id, true );
 					} else if( username_exists( $username ) ) {
 						$user 	= get_user_by('login', $username );
 						$user_id 	= $user->ID;
-						if(get_option('oxdOpenId_gluu_login_avatar') && isset($user_picture))
-							update_user_meta($user_id, 'oxdOpenId_user_avatar', $user_picture);
+						wp_update_user(
+								array(
+										'ID' => $user_id,
+										'user_login'  =>  $username,
+										'user_nicename'  =>  $reg_nikname,
+										'user_email'    =>  $reg_email,
+										'display_name' => $reg_display_name,
+										'first_name' => $reg_first_name,
+										'last_name' => $reg_last_name,
+										'user_url' => $reg_website,
+								)
+						);
+						if(get_option('oxdOpenId_gluu_login_avatar') && isset($reg_avatar))
+							update_user_meta($user_id, 'oxdOpenId_user_avatar', $reg_avatar);
 						do_action( 'wp_login', $user->user_login, $user );
 						wp_set_auth_cookie( $user_id, true );
 					} else {
@@ -336,33 +487,29 @@
 							$random_password 	= wp_generate_password( 10, false );
 							$userdata = array(
 									'user_login'  =>  $username,
-									'user_nicename'  =>  $get_user_info->getResponseNickname(),
-									'user_email'    =>  $user_email,
+									'user_nicename'  =>  $reg_nikname,
+									'user_email'    =>  $reg_email,
 									'user_pass'   =>  $random_password,
-									'display_name' => $user_full_name,
-									'first_name' => $first_name,
-									'last_name' => $last_name,
-									'user_url' => $get_user_info->getResponseWebsite(),
+									'display_name' => $reg_display_name,
+									'first_name' => $reg_first_name,
+									'last_name' => $reg_last_name,
+									'user_url' => $reg_website,
 							);
-
 							$user_id 	= wp_insert_user( $userdata);
-							$user	= get_user_by('email', $user_email );
-
-							if(get_option('oxdOpenId_gluu_login_avatar') && isset($user_picture)){
-								update_user_meta($user_id, 'oxdOpenId_user_avatar', $user_picture);
+							$user	= get_user_by('email', $reg_email );
+							if(get_option('oxdOpenId_gluu_login_avatar') && isset($reg_avatar)){
+								update_user_meta($user_id, 'oxdOpenId_user_avatar', $reg_avatar);
 							}
 							do_action( 'wp_login', $user->user_login, $user );
 							wp_set_auth_cookie( $user_id, true );
 						}
 					}
 				}
-
 				$redirect_url = oxd_openid_get_redirect_url();
 				wp_redirect($redirect_url);
 				exit;
 
 			}
-
 			if(isset($_REQUEST['autoregister']) and strpos($_REQUEST['autoregister'],'false') !== false) {
 				if(!is_user_logged_in()) {
 					oxd_openid_disabled_register_message();
@@ -443,9 +590,11 @@
 		if(get_option('oxd_openid_logout_redirection_enable') == 1){
 			add_filter( 'logout_url', 'oxd_openid_redirect_after_logout',0,1);
 		}
+
 		add_action( 'widgets_init', create_function( '', 'register_widget( "oxd_openid_login_wid" );' ) );
 		add_action( 'init', 'oxd_openid_login_validate' );
 		add_action( 'init', 'oxd_openid_start_session' );
 		add_action( 'wp_logout', 'oxd_openid_end_session' );
 	}
+
 ?>

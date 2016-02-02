@@ -67,12 +67,14 @@ function oxd_openid_show_new_registration_page() {
         <div class="oxd_openid_table_layout">
             <?php if(!is_oxd_registered()) { ?>
                 <div class="mess_red">
-                    Please enter gluu and oxd configuration for continue.
+                    Please enter gluu configuration for continue.
                 </div>
             <?php } ?>
-            <h3>Enter gluu and oxd configuration.</h3>
-            <div class="mess_red">1. If You have not installed gluu server (<a target="_blank" href="http://www.gluu.org/docs////admin-guide/deployment/ubuntu/">how to install and run</a>) in Your web server, Please download, install and run gluu server. For more information <a target="_blank" href="http://www.gluu.org/">click me</a>.</div>
-            <div class="mess_red">2. Please download, install and run OXD server (<a target="_blank" href="http://ox.gluu.org/doku.php?id=oxd:home&s[]=mvn">how to install and run</a>) in Your web server. For more information <a target="_blank" href="http://ox.gluu.org/doku.php?id=oxd:rp">click me</a>.</div>
+            <h3>Enter gluu configuration.</h3>
+            <div class="mess_red">If You have not installed gluu server (<a target="_blank" href="http://www.gluu.org/docs////admin-guide/deployment/ubuntu/">how to install and run</a>) in Your web server, Please download, install and run gluu server. For more information <a target="_blank" href="http://www.gluu.org/">click me</a>.</div>
+            <hr>
+            <div class="mess_red"> If You have not installed java in your server, please install java in Your server ("command in terminal"  apt-get install default-jre).
+            </div>
             <hr>
             <table class="oxd_openid_settings_table">
                     <tr>
@@ -105,11 +107,18 @@ function oxd_openid_show_new_registration_page() {
                             value="<?php echo $current_user->user_email;?>" /></td>
                     </tr>
                     <tr>
-                        <td><b><font color="#FF0000">*</font>Oxd host port:</b></td>
+                        <td><b><font color="#FF0000">*</font>Gluu server url:</b></td>
+                        <td><input class="oxd_openid_table_textbox" type="url" name="gluu_url"
+                                   required placeholder="https://ce-dev.gluu.org"
+                                   value="" /></td>
+
+                    </tr>
+                    <tr>
+                        <td><b><font color="#FF0000">*</font>Free port:</b></td>
                         <td>
                             <br/>
-                            <input class="oxd_openid_table_textbox" required type="number" name="oxd_host_port" value="8099" placeholder="Please enter oxd open port (for example 8099). (Min. number 0, Max. number 65535)" />
-                            <p style="color:red" class="description">It must be the same with oxd server's in oxd-conf.json file's with parameter "port".</p>
+                            <input class="oxd_openid_table_textbox" required type="number" name="oxd_host_port" value="8099" placeholder="Please enter free port (for example 8099). (Min. number 0, Max. number 65535)" />
+                            <p style="color:red" class="description">It must be free port in your server.</p>
                         </td>
                     </tr>
                     <tr>
@@ -129,7 +138,7 @@ function oxd_openid_apps_config() {
         <div class="oxd_openid_table_layout">
             <?php if(!is_oxd_registered()) { ?>
                 <div class="mess_red">
-                    Please enter gluu and oxd configuration for continue.
+                    Please enter gluu configuration for continue.
                 </div>
             <?php } ?>
             <table>
@@ -517,7 +526,7 @@ function oxd_openid_login_config_info(){
          if(!is_oxd_registered()) {
          ?>
             <div class="mess_red">
-            Please enter gluu and oxd configuration for continue.
+            Please enter gluu configuration for continue.
             </div>
         <?php } ?>
 
@@ -602,6 +611,39 @@ function oxd_openid_login_config_info(){
                                 </td>
                             </tr>
                             <tr>
+                                <th></th>
+                                <td>
+                                    <div style="border-radius: 10px;  background-color: #01ffa0; width: 95%;height: 45px; font-size: 30px; wcursor: pointer; text-align: center;">
+                                        <a style="width:95%;font-size: 20px; color: black; font-weight: bold; cursor: pointer; text-align: center;" id="show_scope_table">Show or hide all scopes for delete</a>
+                                    </div>
+                                    <br/>
+                                    <table id="custom_scope_table" class="form-table" style="width:95%;display: none; text-align: center">
+                                        <tr>
+                                            <th> <h3>N</h3> </th>
+                                            <th><h3>Scope name</h3></th>
+                                            <th><h3>Delete</h3></th>
+                                        </tr>
+                                        <?php
+                                        $custom_scripts = get_option('oxd_openid_scops');
+                                        $n = 0;
+                                        foreach($custom_scripts as $custom_script){
+                                            $n++;
+                                            ?>
+                                            <tr>
+                                                <td><?php echo $n;?></td>
+                                                <td><?php echo $custom_script;?></td>
+                                                <td><input type="button" onclick="delete_scopes('<?php echo $custom_script;?>')" class="button button-primary button-large" <?php if(!is_oxd_registered()) echo 'disabled'?> value="Delete" name="set_oxd_config" /></td>
+                                            </tr>
+                                            <?php
+                                        }
+                                        ?>
+
+                                    </table>
+                                    <br/>
+                                </td>
+                            </tr>
+
+                            <tr>
                                 <th scope="row">
                                     <p>Add multiple custom scripts</p>
                                     <p style="color:red" class="description">Necessary to fill the hole row</p>
@@ -679,7 +721,7 @@ function oxd_openid_shortcode_info(){
 	<div class="oxd_openid_table_layout">
 	    <?php if(!is_oxd_registered()) { ?>
 		<div class="mess_red">
-		    Please enter gluu and oxd configuration for continue.
+		    Please enter gluu configuration for continue.
 		</div>
 	<?php } ?>
 		<table>
@@ -738,9 +780,10 @@ function oxd_openid_troubleshoot_info(){ ?>
 	<div class="oxd_openid_table_layout">
 	    <?php if(!is_oxd_registered()) { ?>
 		<div class="mess_red">
-		    Please enter gluu and oxd configuration for continue.
+		    Please enter gluu configuration for continue.
 		</div>
 	    <?php } ?>
+        <h3 style="border: 1px solid green" align="center"><img width="100%" src="<?php echo plugins_url('plugin.jpg', __FILE__);?>"></h3>
 		<table width="100%">
 		    <tbody>
                 <tr>

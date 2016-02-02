@@ -17,6 +17,12 @@
 	font-family: "Times New Roman", Times, serif;
 	font-weight: bold;
 }
+#custom_scope_table, #custom_scope_table tr,#custom_scope_table tr td,#custom_scope_table tr th{
+	text-align: center;
+	border: 1px solid green;
+	font-family: "Times New Roman", Times, serif;
+	font-weight: bold;
+}
 .oxd_openid_support_layout{
 	width: 93%;
 	background-color:#FFFFFF;

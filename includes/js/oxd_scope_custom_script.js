@@ -65,12 +65,28 @@ jQuery(document).ready(function(){
     jQuery("#show_script_table").click(function(){
         jQuery("#custom_script_table").toggle();
     });
+    jQuery("#show_scope_table").click(function(){
+        jQuery("#custom_scope_table").toggle();
+    });
 });
 function delete_custom_script(val){
     jQuery.ajax({
         url: window.location,
         type: 'POST',
         data:{option:'oxd_openid_config_info_hidden', delete_value:val},
+        success: function(result){
+            if(result){
+                location.reload();
+            }else{
+                alert('Error, please try again.')
+            }
+        }});
+}
+function delete_scopes(val){
+    jQuery.ajax({
+        url: window.location,
+        type: 'POST',
+        data:{option:'oxd_openid_config_info_hidden', delete_scope:val},
         success: function(result){
             if(result){
                 location.reload();
