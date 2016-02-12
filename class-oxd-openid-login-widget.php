@@ -220,39 +220,63 @@
 		}
 
 		function oxd_openid_end_session() {
-			$config_option = get_option( 'oxd_config' );
-			if(get_option('oxd_id') && $_SESSION['user_oxd_access_token']){
-				$conf = get_option('oxd_config');
+				$config_option = get_option( 'oxd_config' );
 				if(get_option('oxd_id')){
 					if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-						if(!exec('netstat -aon |find/i "listening" |find "'.$conf['oxd_host_port'].'"')){
-							$startDir = plugin_dir_path( __FILE__ ).'oxd-server/bin';
-							chdir($startDir);
-							$fileName = 'oxd-start.bat';
-							exec($fileName);
+						if(exec('netstat -aon |find/i "listening" |find "'.$config_option['oxd_host_port'].'"')){
+							$logout = new Logout();
+							$logout->setRequestOxdId(get_option('oxd_id'));
+							$logout->setRequestIdToken($_COOKIE['user_oxd_id_token']);
+							$logout->setRequestPostLogoutRedirectUri($config_option['logout_redirect_uri']);
+							$logout->setRequestSessionState($_COOKIE['session_states']);
+							$logout->setRequestState($_COOKIE['states']);
+							$logout->request();
+							unset($_COOKIE['user_oxd_access_token']);
+							unset($_COOKIE['user_oxd_id_token']);
+							unset($_COOKIE['session_states']);
+							unset($_COOKIE['states']);
+							echo "<a href='".$logout->getResponseObject()->data->uri."'>Logout from all sites.</a> <a href='".home_url( '/', 'https' )."'>Go home page.</a>";
+							exit;
 						}
 					} else {
-						if(!exec('netstat -tulpn | grep :'.$conf['oxd_host_port'])){
-							$startDir = plugin_dir_path( __FILE__ ).'oxd-server/bin';
-							chdir($startDir);
-							$fileName = './oxd-start.sh';
-							exec($fileName);
+						if(exec('netstat -tulpn | grep :'.$config_option['oxd_host_port'])){
+							$logout = new Logout();
+							$logout->setRequestOxdId(get_option('oxd_id'));
+							$logout->setRequestIdToken($_COOKIE['user_oxd_id_token']);
+							$logout->setRequestPostLogoutRedirectUri($config_option['logout_redirect_uri']);
+							$logout->setRequestSessionState($_COOKIE['session_states']);
+							$logout->setRequestState($_COOKIE['states']);
+							$logout->request();
+							unset($_COOKIE['user_oxd_access_token']);
+							unset($_COOKIE['user_oxd_id_token']);
+							unset($_COOKIE['session_states']);
+							unset($_COOKIE['states']);
+							echo "<a href='".$logout->getResponseObject()->data->uri."'>Logout from all sites.</a> <a href='".home_url( '/', 'https' )."'>Go home page.</a>";
+							exit;
 						}
 					}
+
 				}
-				$logout = new Logout();
-				$logout->setRequestOxdId(get_option('oxd_id'));
-				$logout->setRequestPostLogoutRedirectUri($config_option['logout_redirect_uri']);
-				$logout->setRequestIdToken($_SESSION['user_oxd_access_token']);
-				$logout->request();
-			}
-			if( session_id() ) {
-				unset($_SESSION['user_oxd_access_token']);
-				unset($_SESSION['user_oxd_id_token']);
-				session_destroy();
+
+		}
+		function oxd_openid_logout_validate()
+		{
+			if (isset($_REQUEST['option']) and strpos($_REQUEST['option'], 'allLogout') !== false && !isset($_REQUEST['state'])) {
+
+				echo '<script>
+						var delete_cookie = function(name) {
+							document.cookie = name + \'=;expires=Thu, 01 Jan 1970 00:00:01 GMT;\';
+						};
+						delete_cookie(\'user_oxd_access_token\');
+						delete_cookie(\'user_oxd_id_token\');
+						delete_cookie(\'session_states\');
+						delete_cookie(\'states\');
+					</script>';
+				wp_destroy_current_session();
+				wp_clear_auth_cookie();
+				wp_logout();
 			}
 		}
-
 		function oxd_openid_login_validate(){
 			if( isset( $_REQUEST['option'] ) and strpos( $_REQUEST['option'], 'getOxdSocialLogin' ) !== false ) {
 				$http = isset($_SERVER['HTTPS']) && !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? "https://" : "http://";
@@ -262,17 +286,17 @@
 				if(get_option('oxd_id')){
 					if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
 						if(!exec('netstat -aon |find/i "listening" |find "'.$conf['oxd_host_port'].'"')){
-							$startDir = plugin_dir_path( __FILE__ ).'oxd-server/bin';
-							chdir($startDir);
-							$fileName = 'oxd-start.bat';
-							exec($fileName);
+							echo "<script>
+									alert('Oxd server is not switched on.');location.href='".site_url()."';
+								 </script>";
+							exit;
 						}
 					} else {
 						if(!exec('netstat -tulpn | grep :'.$conf['oxd_host_port'])){
-							$startDir = plugin_dir_path( __FILE__ ).'oxd-server/bin';
-							chdir($startDir);
-							$fileName = './oxd-start.sh';
-							exec($fileName);
+							echo "<script>
+									alert('Oxd server is not switched on.');location.href='\".site_url().\"';
+								 </script>";
+							exit;
 						}
 					}
 				}
@@ -287,26 +311,8 @@
 				$http = isset($_SERVER['HTTPS']) && !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? "https://" : "http://";
 				$parts = parse_url($http . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"]);
 				parse_str($parts['query'], $query);
-
 				$config_option = get_option( 'oxd_config' );
 				$conf = get_option('oxd_config');
-				if(get_option('oxd_id')){
-					if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-						if(!exec('netstat -aon |find/i "listening" |find "'.$conf['oxd_host_port'].'"')){
-							$startDir = plugin_dir_path( __FILE__ ).'oxd-server/bin';
-							chdir($startDir);
-							$fileName = 'oxd-start.bat';
-							exec($fileName);
-						}
-					} else {
-						if(!exec('netstat -tulpn | grep :'.$conf['oxd_host_port'])){
-							$startDir = plugin_dir_path( __FILE__ ).'oxd-server/bin';
-							chdir($startDir);
-							$fileName = './oxd-start.sh';
-							exec($fileName);
-						}
-					}
-				}
 				$get_tokens_by_code = new Get_tokens_by_code();
 				$get_tokens_by_code->setRequestOxdId(get_option('oxd_id'));
 				$get_tokens_by_code->setRequestCode($_REQUEST['code']);
@@ -314,8 +320,10 @@
 				$get_tokens_by_code->setRequestScopes($config_option["scope"]);
 				$get_tokens_by_code->request();
 				$get_tokens_by_code_array = $get_tokens_by_code->getResponseObject()->data->id_token_claims;
-				$_SESSION['user_oxd_id_token']  = $get_tokens_by_code->getResponseIdToken();
-				$_SESSION['user_oxd_access_token']  = $get_tokens_by_code->getResponseAccessToken();
+				setcookie( 'user_oxd_id_token', $get_tokens_by_code->getResponseIdToken(), time()+3600*24*100, COOKIEPATH, COOKIE_DOMAIN, false);
+				setcookie( 'user_oxd_access_token', $get_tokens_by_code->getResponseAccessToken(), time()+3600*24*100, COOKIEPATH, COOKIE_DOMAIN, false);
+				setcookie( 'session_states', $_REQUEST['session_state'], time()+3600*24*100, COOKIEPATH, COOKIE_DOMAIN, false);
+				setcookie( 'states', $_REQUEST['state'], time()+3600*24*100, COOKIEPATH, COOKIE_DOMAIN, false);
 				$get_user_info = new Get_user_info();
 				$get_user_info->setRequestOxdId(get_option('oxd_id'));
 				$get_user_info->setRequestAccessToken($_SESSION['user_oxd_access_token']);
@@ -584,15 +592,13 @@
 			}else{
 				return $logout_url;
 			}
-
 		}
-
 		if(get_option('oxd_openid_logout_redirection_enable') == 1){
 			add_filter( 'logout_url', 'oxd_openid_redirect_after_logout',0,1);
 		}
-
 		add_action( 'widgets_init', create_function( '', 'register_widget( "oxd_openid_login_wid" );' ) );
 		add_action( 'init', 'oxd_openid_login_validate' );
+		add_action( 'init', 'oxd_openid_logout_validate' );
 		add_action( 'init', 'oxd_openid_start_session' );
 		add_action( 'wp_logout', 'oxd_openid_end_session' );
 	}

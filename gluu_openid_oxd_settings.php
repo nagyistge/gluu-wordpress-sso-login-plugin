@@ -74,16 +74,15 @@
 			add_option('oxd_openid_scops',array('openid','profile','email'));
 			$custom_scripts = array(
 									array('name'=>'Google','image'=>plugins_url( 'includes/images/icons/google.png', __FILE__ ),'value'=>'gplus'),
-									array('name'=>'Basic','image'=>plugins_url( 'includes/images/icons/Basic.png', __FILE__ ),'value'=>'basic'),
-									array('name'=>'Duo','image'=>plugins_url( 'includes/images/icons/Duo.png', __FILE__ ),'value'=>'duo'),
+									array('name'=>'Basic','image'=>plugins_url( 'includes/images/icons/basic.png', __FILE__ ),'value'=>'basic'),
+									array('name'=>'Duo','image'=>plugins_url( 'includes/images/icons/duo.png', __FILE__ ),'value'=>'duo'),
 									array('name'=>'U2F token','image'=>plugins_url( 'includes/images/icons/U2F.png', __FILE__ ),'value'=>'u2f')
 			);
 			add_option('oxd_openid_custom_scripts',$custom_scripts);
 		}
 
 		function oxd_openid_deactivate() {
-			//$config_option = get_option( 'oxd_config' );
-			//exec("FOR /F \"tokens=4 delims= \" %%P IN ('netstat -a -n -o ^| findstr :".$config_option['oxd_host_port']."') DO @ECHO TaskKill.exe /PID %%P");exit;
+			$conf = get_option('oxd_config');
 			$custom_scripts = get_option('oxd_openid_custom_scripts');
 			foreach($custom_scripts as $custom_script){
 				delete_option('oxd_openid_'.$custom_script['value'].'_enable');
@@ -237,10 +236,6 @@
 					update_option( 'oxd_openid_message', 'Enter your oxd host port (Min. number 0, Max. number 65535)');
 					$this->oxd_openid_show_error_message();
 					return;
-				} else if (filter_var($_POST['gluu_url'], FILTER_VALIDATE_URL) === false) {
-					update_option( 'oxd_openid_message', 'Url is not valid.');
-					$this->oxd_openid_show_error_message();
-					return;
 				}else if(strpbrk($_POST['email'],$illegal)) {
 					update_option( 'oxd_openid_message', 'Please match the format of Email. No special characters are allowed.');
 					$this->oxd_openid_show_error_message();
@@ -258,47 +253,17 @@
 				$config_option = array(
 						"oxd_host_ip" => $oxd_host_ip,
 						"oxd_host_port" =>$oxd_host_port,
-						"authorization_redirect_uri" => home_url().'/wp-login.php?option=oxdOpenId',
-						"logout_redirect_uri" => wp_logout_url(),
+						"authorization_redirect_uri" => site_url().'/wp-login.php?option=oxdOpenId',
+						"logout_redirect_uri" => site_url().'/index.php?option=allLogout',
 						"scope" => [ "openid", "profile","email"],
 						"application_type" => "web",
-						"redirect_uris" => [ home_url().'/wp-login.php?option=oxdOpenId' ],
+						"redirect_uris" => [ site_url().'/wp-login.php?option=oxdOpenId' ],
 						"response_types" => ["code"],
-						"gluu_url" => $_POST['gluu_url'],
 						"grant_types" =>["authorization_code"],
 						"acr_values" => [],
 						"am_host" =>""
 				);
 				update_option( 'oxd_config', $config_option );
-				$jsonString = file_get_contents(plugin_dir_path( __FILE__ ).'oxd-server/conf/oxd-conf.json');
-				$data = json_decode($jsonString, true);
-				$data['op_host'] = $_POST['gluu_url'];
-				$data['port'] = (int)$_POST['oxd_host_port'];
-				$newJsonString = json_encode($data);
-				file_put_contents(plugin_dir_path( __FILE__ ).'oxd-server/conf/oxd-conf.json', $newJsonString);
-				if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-					if(!exec('netstat -aon |find/i "listening" |find "'.(int)$_POST['oxd_host_port'].'"')){
-						$startDir = plugin_dir_path( __FILE__ ).'/oxd-server/bin';
-						chdir($startDir);
-						$fileName = 'oxd-start.bat';
-						exec($fileName);
-					}else{
-						update_option( 'oxd_openid_message', 'Port is using, please use port which is not using.');
-						$this->oxd_openid_show_error_message();
-						return;
-					}
-				} else {
-					if(!exec('netstat -tulpn | grep :'.(int)$_POST['oxd_host_port'])){
-						$startDir = plugin_dir_path( __FILE__ ).'/oxd-server/bin';
-						chdir($startDir);
-						$fileName = './oxd-start.sh';
-						exec($fileName);
-					}else{
-						update_option( 'oxd_openid_message', 'Port is using, please use port which is not using.');
-						$this->oxd_openid_show_error_message();
-						return;
-					}
-				}
 				$register_site = new Register_site();
 				$register_site->setRequestAcrValues($config_option['acr_values']);
 				$register_site->setRequestAuthorizationRedirectUri($config_option['authorization_redirect_uri']);
@@ -308,6 +273,7 @@
 				$register_site->setRequestLogoutRedirectUri($config_option['logout_redirect_uri']);
 				$register_site->setRequestContacts([$email]);
 				$register_site->setRequestApplicationType('web');
+				$register_site->setRequestClientLogoutUri($config_option['logout_redirect_uri']);
 				$register_site->setRequestScope($config_option['scope']);
 				$status = $register_site->request();
 				if(!$status['status']){
