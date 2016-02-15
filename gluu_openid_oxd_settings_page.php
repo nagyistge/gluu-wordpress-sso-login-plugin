@@ -23,8 +23,8 @@ function oxd_register_openid() {
             <?php if(!is_oxd_registered()) { ?>
                 <a class="nav-tab <?php echo $active_tab == 'register' ? 'nav-tab-active' : ''; ?>" href="<?php echo add_query_arg( array('tab' => 'register'), $_SERVER['REQUEST_URI'] ); ?>">General</a>
             <?php } ?>
-            <a class="nav-tab <?php echo $active_tab == 'login_config' ? 'nav-tab-active' : ''; ?>" href="<?php echo add_query_arg( array('tab' => 'login_config'), $_SERVER['REQUEST_URI'] ); ?>">Scopes and custom scripts</a>
-            <a class="nav-tab <?php echo $active_tab == 'login' ? 'nav-tab-active' : ''; ?>" href="<?php echo add_query_arg( array('tab' => 'login'), $_SERVER['REQUEST_URI'] ); ?>">Gluu and social login config</a>
+            <a class="nav-tab <?php echo $active_tab == 'login_config' ? 'nav-tab-active' : ''; ?>" href="<?php echo add_query_arg( array('tab' => 'login_config'), $_SERVER['REQUEST_URI'] ); ?>">OpenID Connect Configuration</a>
+            <a class="nav-tab <?php echo $active_tab == 'login' ? 'nav-tab-active' : ''; ?>" href="<?php echo add_query_arg( array('tab' => 'login'), $_SERVER['REQUEST_URI'] ); ?>">Wordpress Configuration</a>
             <a class="nav-tab <?php echo $active_tab == 'shortcode' ? 'nav-tab-active' : ''; ?>" href="<?php echo add_query_arg( array('tab' => 'shortcode'), $_SERVER['REQUEST_URI'] ); ?>">Shortcode</a>
             <a class="nav-tab <?php echo $active_tab == 'help' ? 'nav-tab-active' : ''; ?>" href="<?php echo add_query_arg( array('tab' => 'help'), $_SERVER['REQUEST_URI'] ); ?>">Help & Troubleshooting</a>
         </h2>
@@ -67,30 +67,33 @@ function oxd_openid_show_new_registration_page() {
         <div class="oxd_openid_table_layout">
             <?php if(!is_oxd_registered()) { ?>
                 <div class="mess_red">
-                    Please enter gluu configuration for continue.
+                    Please enter the details of your OpenID Connect Provider.
                 </div>
             <?php } ?>
             <br/>
-            <div><h3>REGISTER YOUR SITE IN THE GLUU SERVER</h3></div>
+            <div><h3>Register your site with an OpenID Connect Provider</h3></div>
             <hr>
-            <div class="mess_red">If You have not installed gluu server (<a target="_blank" href="http://www.gluu.org/docs////admin-guide/deployment/ubuntu/">how
-                    to install and run</a>) in Your web server, Please download, install and run
-                gluu server. For more information <a target="_blank" href="http://www.gluu.org/">click me</a>.
+            <div class="mess_red">If you do not have an OpenID Connect provider, you may want to look at the
+            Gluu Server (<a target="_blank" href="http://www.gluu.org/docs">. Like Wordpress, there is a free open
+            source Community Edition. For more information about Gluu Server support please visit <a target="_blank"
+            href="http://www.gluu.org/">our website</a>.
             </div>
             <div class="mess_red">
                 <h3>Instructions to Install oxd server</h3>
-                <br><b>NOTE:</b> The oxd server needs to be installed on your DMZ Server
-                that has access to your Gluu server. It needs to be publicly accessible.
+                <br><b>NOTE:</b> The oxd server should be installed on the same server as your Wordpress site.
+                It is recommended that the oxd server listen only on the localhost interface, so only your
+                local applications can reach its API's.
                 <ol style="list-style:decimal !important; margin: 30px">
-                    <li>Download the oxd-server by clicking this '
-                        <a href="http://ox.gluu.org/maven/org/xdi/oxd-server/3.0.7-SNAPSHOT/oxd-server-3.0.7-SNAPSHOT-distribution.zip">link</a>.</li>
                     <li>Extract and copy in your DMZ Server.</li>
-                    <li>If You have not installed java in your server, please open command line install java in Your server</li>
-                    <li>Edit the <b>oxd-conf.json</b> in the <b>conf</b> directory to specify port on which Gateway will run, and specify oh_host on which Gluu server will use.</li>
-                    <li>Open command line and navigate to the extracted folder in the <b>bin</b> directory.</li>
+                    <li>Download the latest oxd-server package for Centos or Ubuntu. See
+                    <a href="http://gluu.org/docs-oxd">oxd docs</a> for more info.
+                    <li>If you are installing an .rpm or .deb, make sure you have Java in your server.
+                    <li>Edit <b>oxd-conf.json</b> in the <b>conf</b> directory to specify the port on which
+                    it will run, and specify the hostname of the OpenID Connect provider.</li>
+                    <li>Open the command line and navigate to the extracted folder in the <b>bin</b> directory.</li>
                     <li>For Linux environment, run <b>sh oxd-start.sh &</b></li>
                     <li>For Windows environment, run <b>oxd-start.bat</b></li>
-                    <li>After the server starts, set port number and your email in this page and click Next.</li>
+                    <li>After the server starts, set the port number and your email in this page and click Next.</li>
                 </ol>
                 </div>
             <hr>
@@ -169,11 +172,40 @@ function oxd_openid_apps_config() {
                 </tr>
             </table>
             <table>
-                <h3>Select Apps</h3>
-                <p>Select gluu applications to enable login</p>
-                <div class="mess_red">
-                    If you have not enable custom script in gluu server, please go to Your gluu server tab Manage Custom Scripts and enable Custom Scripts.
-                </div>
+                <h3>Manage Authentication</h3>
+
+                <p>An OpenID Connect Provider (OP) like the Gluu Server may provide many different work flows for
+                authentication. For example, an OP may offer password authentication, token authentication, social
+                authentication, biometric authentication, and other different mechanisms. Offering a lot of different
+                types of authentication enables an OP to offer the most convenient, secure, and affordable option to
+                identify a person, depending on the need to mitigate risk, and the sensors and inputs available on the
+                devicethat the peron is using.
+                </p>
+
+                <p>
+                The OP enables a client (like a Wordpress site), to signal which type of authentication should be
+                used. The client can register a
+                <a href="http://openid.net/specs/openid-connect-registration-1_0.html#ClientMetadata">default_acr_value</a>
+                or during the authentication process, a client may request a specific type of authentication using the
+                 <a href="http://openid.net/specs/openid-connect-core-1_0.html#AuthRequest">acr_values</a> parameter.
+                This is the mechanism that the Gluu SSO Plugin uses: each login icon corresponds to a different acr value.
+                For example, and acr may tell the OpenID Connect to use Facebook, Google or even plain old password
+                authentication. The nice thing about this approach is that your applications (like Wordpress) don't have
+                to implement the business logic for social login--it's handled by the OpenID Connect Provider.
+                </p>
+
+                <p>
+                If you are using the Gluu Server as your OP, you'll notice that in the Manage Custom Scripts
+                tab of oxTrust (the Gluu Server admin interface), each authentication script has a name.
+                This name corresponds to the acr value.  The default acr for password authentication is set in
+                the
+                <a href="https://www.gluu.org/docs/admin-guide/configuration/#manage-authentication">LDAP Authentication</a>,
+                section--look for the "Name" field. Likewise, each custom script has a "Name", for example
+                see the
+                <a href="https://www.gluu.org/docs/admin-guide/configuration/#manage-custom-scripts">Manage Custom
+                Scripts</a> section.
+                </p>
+
                 <tr>
                     <td>
                         <table style="width:100%">
@@ -199,7 +231,7 @@ function oxd_openid_apps_config() {
                         <br>
                         <hr>
                         <h3>Customize Login Icons</h3>
-                        <p>Customize shape, theme and size of gluu and social login config icons</p>
+                        <p>Customize shape, theme and size of the login icons</p>
                     </td>
                 </tr>
                 <tr>
@@ -321,7 +353,8 @@ function oxd_openid_apps_config() {
                 </tr>
                 <tr style="display: none">
                     <td>
-                        <br><strong>*NOTE:</strong><br/>Custom background: This will change the background color of login icons.
+                        <br><strong>*NOTE:</strong><br/>Custom background: This will change the background color of
+                        the login icons.
                     </td>
                 </tr>
                 <tr>
@@ -436,7 +469,13 @@ function oxd_openid_apps_config() {
                 </tr>
                 <tr>
                     <td>
-                        If Auto-register users is unchecked, users will not be able to register using Gluu and  Social Login. The users who already have an account will be able to login.  This setting stands true only when users are registering using Gluu and Social Login. This will not interfere with users registering through the regular WordPress.
+                        If "Auto-Register Users" is checked, when a new user is authenticated via
+                        OpenID Connect, the plugin will automatically create a corresponding local
+                        user in the Wordpress database, using the information about the person
+                        retrieved from the user_info endpoint of the Openid Connect Provider.
+                        If it's unchecked, only users who already have an account in the local
+                        Wordpress database will be able to login. Note: this feature will not interfere
+                        with people who try to register through the regular WordPress registration form.
                         <br/><br/>
                         <input type="checkbox" id="auto_register_enable" name="oxd_openid_auto_register_enable" value="1"
                         <?php if(!is_oxd_registered()) echo 'disabled'?>	<?php checked( get_option('oxd_openid_auto_register_enable') == 1 );?> /><b>Auto-register users</b>
@@ -480,7 +519,7 @@ function oxd_openid_apps_config() {
                     <td>
                         <br>
                         <hr>
-                        <h3>Customize Text For Gluu and Social Login Buttons / Icons</h3>
+                        <h3>Customize Text For Login Icons</h3>
                     </td>
                 </tr>
             </table>
@@ -504,19 +543,20 @@ function oxd_openid_apps_config() {
                         <hr>
                         <p>
                             <h3>Add Login Icons</h3>
-                            You can add login icons in the following areas from <strong>Display Options</strong>. For other areas(widget areas), use Login Widget.
+                            You can add login icons in the following areas from <strong>Display Options</strong>. For
+                            other areas (widget areas), use Login Widget.
                         <ol>
-                            <li>Default Login Form: This option places login icons below the default login form on wp-login.</li>
-                            <li>Default Registration Form: This option places login icons below the default registration form.</li>
-                            <li>Comment Form: This option places login icons above the comment section of all your posts.</li>
+                            <li>Default Login Form: Login icons will appear below the default login form on wp-login.</li>
+                            <li>Default Registration Form: Login icons will appear below the default registration form.</li>
+                            <li>Comment Form: Login icons will appear above the comment section of all your posts.</li>
                         </ol>
                         <h3>Add Login Icons as Widget</h3>
                         <ol>
                             <li>Go to Appearance->Widgets. Among the available widgets you
-                                will find Gluu and Social Login Widget, drag it to the widget area where
+                                will find the Gluu and Social Login Widget, drag it to the widget area where
                                 you want it to appear.</li>
-                            <li>Now logout and go to your site. You will see app icon for which you enabled login.</li>
-                            <li>Click that app icon and login with your existing app account to wordpress.</li>
+                            <li>Now logout and go to your site. You should see the new login icons.</li>
+                            <li>Click that icon and login with your existing account to Wordpress.</li>
                         </ol>
                         </p>
                     </td>
@@ -588,7 +628,7 @@ function oxd_openid_login_config_info(){
                                 </th>
                                 <td>
                                     <div class="mess_red">
-                                        You can modificate current scopes or add new custom scope in your Gluu Server - OpenID Connect - Scopes.
+                                        You can modify the current scopes or add new custom scopes in your Gluu Server - OpenID Connect - Scopes.
                                     </div>
                                 </td>
                             </tr>
@@ -611,7 +651,7 @@ function oxd_openid_login_config_info(){
                                 <th scope="row"></th>
                                 <td>
                                     <div class="mess_red">
-                                        You can modificate current scripts or add new custom scripts in your Gluu Server - Configuration - Menage Custom Scripts.
+                                        You can modify the current scripts or add new custom scripts in your Gluu Server - Configuration - Manage Custom Scripts.
                                     </div>
                                 </td>
                             </tr>
@@ -725,7 +765,7 @@ function oxd_openid_shortcode_info(){
 	<div class="oxd_openid_table_layout">
 	    <?php if(!is_oxd_registered()) { ?>
 		<div class="mess_red">
-		    Please enter gluu configuration for continue.
+		    Please enter gluu configuration to continue.
 		</div>
 	<?php } ?>
 		<table>
@@ -739,14 +779,14 @@ function oxd_openid_shortcode_info(){
                 <td>
                     <h3><a id="openid_login_shortcode_title"  aria-expanded="false" >Gluu and Social Login Shortcode</a></h3>
                     <div hidden="" id="openid_login_shortcode" style="font-size:13px !important">
-                        Use gluu and social login Shortcode in the content of required page/post where you want to display Gluu and Social Login Icons.<br>
+                        Use the shortcode in the content of the required page/post where you want to display login icons.<br>
                         <b>Example:</b> <code>[gluu_login]</code>
                         <h4 style="margin-bottom:0 !important">For Icons</h4>
-                        You can use  different attribute to customize gluu and social login icons. All attributes are optional.<br>
+                        You can use different attributes to customize the icons. All attributes are optional.<br>
                         <b>Example:</b> <code>[gluu_login  shape="<?php echo get_option('oxd_openid_login_theme');?>" theme="<?php echo get_option('oxd_openid_login_custom_theme');?>" space="<?php echo get_option('oxd_login_icon_space')?>" size="<?php echo get_option('oxd_login_icon_custom_size')?>"]</code><br>
                         <div style="display: none">
                             <h4 style="margin-bottom:0 !important">For Long-Buttons</h4>
-                            You can use different attribute to customize gluu and social login buttons. All attributes are optional.<br>
+                            You can use different attributes to customize the login icons. All attributes are optional.<br>
                             <b>Example:</b> <code>[gluu_login  shape="longbuttonwithtext" theme="default" space="<?php echo get_option('oxd_login_icon_space')?>" width="300" height="50"]</code>
                             <br>
                             <h4 style="margin-bottom:0 !important">Available values for attributes</h4>
@@ -765,11 +805,11 @@ function oxd_openid_shortcode_info(){
                 <td>
                     <h3><a id="openid_shortcode_inphp_title">Shortcode in php file</a></h3>
                     <div hidden="" id = "openid_shortcode_inphp" style="font-size:13px !important">
-                    You can use shortcode in PHP file as following: &nbsp;&nbsp;
+                    You can use a shortcode in a PHP file like this: &nbsp;&nbsp;
                     &nbsp;
                     <code>&lt;&#63;php echo do_shortcode(‘SHORTCODE’) /&#63;&gt;</code>
                     <br>
-                    Replace SHORTCODE in above code with the required shortcode like [gluu_login theme="default"], so the final code looks like following :
+                    Replace SHORTCODE in the above code with the required shortcode like [gluu_login theme="default"], so the final code looks like following :
                     <br>
                     <code>&lt;&#63;php echo do_shortcode('[gluu_login theme="default"]') &#63;&gt;</code>
                     </div>
@@ -815,7 +855,7 @@ function oxd_openid_troubleshoot_info(){ ?>
                             <hr>
                             <h4><a  id="openid_question3"  >How can I redirect to my blog page after login?</a></h4>
                             <div  id="openid_question3_desc">
-                            You can select one of the options from <b>Redirect URL after login</b> of <b>Display Option</b> section under <b>Gluu and Social Login config</b> tab. <br>
+                            You can select one of the options from <b>Redirect URL after login</b> of <b>Display Option</b> section under <b>Wordpress Config</b> tab. <br>
                             1. Same page where user logged in <br>
                             2. Homepage <br>
                             3. Account Dsahboard <br>

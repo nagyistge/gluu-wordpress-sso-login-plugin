@@ -3,11 +3,11 @@
 /**
  * Plugin Name: Gluu SSO
  * Plugin URI: http://gluu.org
- * Description: Gluu and social login via gluu server. Allow your users to login with Gluu server via Google, Duo, Basic, U2F Token etc using customizable buttons.
+ * Description: Use OpenID Connect to login by leveraging the oxd client service demon.
  * Version: 1.0
  * Author: Vlad Karapetyan
  * Author URI: http://gluu.org
- * License: GPL2
+ * License: MIT
  */
 
 	require('gluu_openid_oxd_settings_page.php');
