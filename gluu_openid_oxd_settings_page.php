@@ -179,7 +179,7 @@ function oxd_openid_apps_config() {
                 authentication, biometric authentication, and other different mechanisms. Offering a lot of different
                 types of authentication enables an OP to offer the most convenient, secure, and affordable option to
                 identify a person, depending on the need to mitigate risk, and the sensors and inputs available on the
-                devicethat the peron is using.
+                device that the person is using.
                 </p>
 
                 <p>
@@ -188,7 +188,7 @@ function oxd_openid_apps_config() {
                 <a href="http://openid.net/specs/openid-connect-registration-1_0.html#ClientMetadata">default_acr_value</a>
                 or during the authentication process, a client may request a specific type of authentication using the
                  <a href="http://openid.net/specs/openid-connect-core-1_0.html#AuthRequest">acr_values</a> parameter.
-                This is the mechanism that the Gluu SSO Plugin uses: each login icon corresponds to a different acr value.
+                This is the mechanism that the Gluu SSO Plugin uses: each login icon corresponds to a acr request value.
                 For example, and acr may tell the OpenID Connect to use Facebook, Google or even plain old password
                 authentication. The nice thing about this approach is that your applications (like Wordpress) don't have
                 to implement the business logic for social login--it's handled by the OpenID Connect Provider.
@@ -577,7 +577,7 @@ function oxd_openid_login_config_info(){
          if(!is_oxd_registered()) {
          ?>
             <div class="mess_red">
-            Please enter gluu configuration for continue.
+            Please enter OXD configuration to continue.
             </div>
         <?php } ?>
         <div>
@@ -591,7 +591,7 @@ function oxd_openid_login_config_info(){
                             <tbody>
                         <tr>
                             <th scope="row">
-                                Your site oxd id
+                                OXD id
                             </th>
                             <td>
                                 <input <?php echo 'disabled'?> type="text" name="oxd_id" value="<?php echo get_option('oxd_id'); ?>" size="100%" />
@@ -634,12 +634,12 @@ function oxd_openid_login_config_info(){
                             </tr>
                             <tr>
                                 <th scope="row">
-                                    Add multiple Scope
+                                    Add scopes
                                 </th>
                                 <td>
                                     <div >
                                         <div id="p_scents">
-                                            <input <?php if(!is_oxd_registered()) echo 'disabled'?> type="button" id="add_new_scope" value="Add row">
+                                            <input <?php if(!is_oxd_registered()) echo 'disabled'?> type="button" id="add_new_scope" value="Add scope">
                                             <p>
                                                <input <?php if(!is_oxd_registered()) echo 'disabled'?> type="text" name="new_scope[]" placeholder="Input scope name" />
                                             </p>
@@ -659,7 +659,7 @@ function oxd_openid_login_config_info(){
                                 <th></th>
                                 <td>
                                     <div style="">
-                                        <button type="button" style="width:95%;font-size: 20px; color: black; font-weight: bold; cursor: pointer; text-align: center;" id="show_scope_table">Show or hide all scopes for delete</button>
+                                        <button type="button" style="width:95%;font-size: 20px; color: black; font-weight: bold; cursor: pointer; text-align: center;" id="show_scope_table">Click here to delete scopes</button>
                                     </div>
                                     <br/>
                                     <table id="custom_scope_table" class="form-table" style="width:95%;display: none; text-align: center">
@@ -690,17 +690,17 @@ function oxd_openid_login_config_info(){
                             <tr>
                                 <th scope="row">
                                     <p>Add multiple custom scripts</p>
-                                    <p style="color:red" class="description">Necessary to fill the hole row</p>
+                                    <p style="color:red" class="description">Both fields are required</p>
                                 </th>
                                 <td>
                                     <div >
 
-                                        <input <?php if(!is_oxd_registered()) echo 'disabled'?> type="button" id="add_new_suctom_script"  value="Add row"/>
+                                        <input <?php if(!is_oxd_registered()) echo 'disabled'?> type="button" id="add_new_suctom_script"  value="Add acr"/>
                                         <input type="hidden" name="count_scripts" value="1" id="count_scripts">
                                         <div id="p_scents_script">
                                             <p>
-                                                <input <?php if(!is_oxd_registered()) echo 'disabled'?> type="text" style="margin-right: 5px " name="new_custom_script_name_1" size="30" placeholder="Input name (example Google+)" />
-                                                <input <?php if(!is_oxd_registered()) echo 'disabled'?> type="text" style="margin-right: 5px " name="new_custom_script_value_1" size="40" placeholder="Input name in gluu server (example gplus)" />
+                                                <input <?php if(!is_oxd_registered()) echo 'disabled'?> type="text" style="margin-right: 5px " name="new_custom_script_name_1" size="30" placeholder="Display name (example Google+)" />
+                                                <input <?php if(!is_oxd_registered()) echo 'disabled'?> type="text" style="margin-right: 5px " name="new_custom_script_value_1" size="40" placeholder="ACR Value (script name in the Gluu Server)" />
                                                 <input type="hidden" name="image_url_1" id="image_url_1" class="regular-text">
                                                 <input <?php if(!is_oxd_registered()) echo 'disabled'?> type="button" name="upload-btn" id="upload-btn_1" onclick="upload_this(1)" class="button-secondary" value="Upload app image (120x120) ">
                                             </p>
@@ -717,14 +717,14 @@ function oxd_openid_login_config_info(){
                                 <th></th>
                                 <td>
                                     <div style="">
-                                        <button type="button"  style="width:95%;font-size: 20px; color: black; font-weight: bold; cursor: pointer; text-align: center;" id="show_script_table">Show or hide all custom scripts for delete</button>
+                                        <button type="button"  style="width:95%;font-size: 20px; color: black; font-weight: bold; cursor: pointer; text-align: center;" id="show_script_table">Click here to delete ACRs</button>
                                     </div>
                                     <br/>
                                     <table id="custom_script_table" class="form-table" style="width:95%;display: none; text-align: center">
                                         <tr>
                                             <th> <h3>N</h3> </th>
-                                            <th><h3>Name</h3></th>
-                                            <th><h3>Name in gluu server</h3></th>
+                                            <th><h3>Display Name</h3></th>
+                                            <th><h3>ACR Value</h3></th>
                                             <th><h3>Image</h3></th>
                                             <th><h3>Delete</h3></th>
                                         </tr>
