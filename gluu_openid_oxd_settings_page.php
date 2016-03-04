@@ -836,7 +836,7 @@ function oxd_openid_troubleshoot_info(){ ?>
                             You can add social and gluu login icons to any page or custom login page using 'gluu sso shortcode' [gluu_login].
                             Refer to 'Shortcode' tab to add customizations to Shortcode.
                         </div>
-                        <hr>
+
                         <h4 style="display: none"><a  id="openid_question12" >Gluu SSO icons are not added to login/registration form.</a></h4>
                         <div  id="openid_question12_desc" style="display: none">
                             Your login/registration form may not be wordpress's default login/registration form.
@@ -858,7 +858,7 @@ function oxd_openid_troubleshoot_info(){ ?>
             <tr>
                 <td>
                     <h3><a id="openid_login_shortcode_title"  aria-expanded="false" >Gluu SSO Shortcode</a></h3>
-                    <div hidden="" id="openid_login_shortcode" style="font-size:13px !important">
+                    <div class="oxd_openid_help_desc" hidden="" id="openid_login_shortcode" style="font-size:13px !important">
                         Use the shortcode in the content of the required page/post where you want to display login icons.<br>
                         <b>Example:</b> <code>[gluu_login]</code>
                         <h4 style="margin-bottom:0 !important">For Icons</h4>

@@ -17,11 +17,6 @@
                    <img src="https://github.com/GluuFederation/gluu-wordpress-sso-login-plugin/blob/master/docu/3.png">
                    <img src="https://github.com/GluuFederation/gluu-wordpress-sso-login-plugin/blob/master/docu/4.png">
                    <img src="https://github.com/GluuFederation/gluu-wordpress-sso-login-plugin/blob/master/docu/5.png">
-                   <img src="https://github.com/GluuFederation/gluu-wordpress-sso-login-plugin/blob/master/docu/6.png">
-                   <img src="https://github.com/GluuFederation/gluu-wordpress-sso-login-plugin/blob/master/docu/7.png">
-                   <img src="https://github.com/GluuFederation/gluu-wordpress-sso-login-plugin/blob/master/docu/8.png">
-                   <img src="https://github.com/GluuFederation/gluu-wordpress-sso-login-plugin/blob/master/docu/9.png">
-                   <img src="https://github.com/GluuFederation/gluu-wordpress-sso-login-plugin/blob/master/docu/10.png">
                    <table width="100%">
                    		<tbody>
                    			<tr>
