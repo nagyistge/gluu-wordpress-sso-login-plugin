@@ -604,7 +604,11 @@ function oxd_openid_login_config_info(){
                                 <div >
                                     <div>
                                         <?php foreach($get_scopes as $scop) :?>
-                                            <input <?php if($options && in_array($scop, $options['scope'])){ echo "checked";} ?> type="checkbox" name="scope[]"  id="<?php echo $scop;?>" value="<?php echo $scop;?>" <?php if(!is_oxd_registered() || $scop=='openid') echo 'disabled'?>>
+                                            <?php if ($scop == 'openid'){?>
+                                                <input <?php if (!is_oxd_registered()) echo ' disabled ' ?>  type="hidden"  name="scope[]"  <?php if ($options && in_array($scop, $options['scope'])) {
+                                                    echo " checked "; } ?> value="<?php echo $scop; ?>" />
+                                            <?php } ?>
+                                            <input <?php if($options && in_array($scop, $options['scope'])){ echo "checked";} ?> type="checkbox" name="scope[]"  id="<?php echo $scop;?>" value="<?php echo $scop;?>" <?php if (!is_oxd_registered() || $scop=='openid') echo ' disabled '; ?> />
                                             <label  for="<?php echo $scop;?>"><?php echo $scop;?></label>
                                         <?php endforeach;?>
                                     </div>
@@ -648,7 +652,11 @@ function oxd_openid_login_config_info(){
                                         <tr>
                                             <td><?php echo $n;?></td>
                                             <td><?php echo $custom_script;?></td>
-                                            <td><input type="button" onclick="delete_scopes('<?php echo $custom_script;?>')" class="button button-primary button-large" <?php if(!is_oxd_registered() || $custom_script=='openid') echo 'disabled'?> value="Delete" name="set_oxd_config" /></td>
+                                            <td>
+                                                <?php if($custom_script!='openid'){?>
+                                                    <input type="button" onclick="delete_scopes('<?php echo $custom_script;?>')" class="button button-primary button-large" <?php if(!is_oxd_registered() || $custom_script=='openid') echo 'disabled'?> value="Delete" name="set_oxd_config" />
+                                                <?php }?>
+                                            </td>
                                         </tr>
                                         <?php
                                     }
