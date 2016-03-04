@@ -24,8 +24,8 @@ jQuery(function() {
 
     jQuery('#add_new_suctom_script').live('click', function() {
         jQuery('<p>' +
-            '<input type="text" style="margin-right: 5px " name="new_custom_script_name_'+j+'" size="30" placeholder="Input name (example Google+)" />' +
-            '<input type="text" style="margin-right: 5px; margin-left: 5px; " name="new_custom_script_value_'+j+'" size="40" placeholder="Input name in gluu server (example gplus)" />' +
+            '<input type="text" style="margin-right: 5px " name="new_custom_script_name_'+j+'" size="30" placeholder="Display name (example Google+)" />' +
+            '<input type="text" style="margin-right: 5px; margin-left: 5px; " name="new_custom_script_value_'+j+'" size="40" placeholder="ACR Value (script name in the Gluu Server)" />' +
             '<input type="hidden" name="image_url_'+j+'" id="image_url_'+j+'" class="regular-text">'+
             '<input type="button" style="margin-right: 5px; margin-left: 3px; " name="upload-btn" onclick="upload_this('+j+')" id="upload-btn_'+j+'" class="button-secondary" value="Upload app image (120x120)" />' +
             '<button id="remScnt_script">Remove</button>' +
