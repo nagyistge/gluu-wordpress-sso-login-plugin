@@ -843,7 +843,6 @@ function oxd_openid_troubleshoot_info(){ ?>
                             In this case you can add social and gluu login icons to custom login/registration form using 'gluu sso shortcode' [gluu_login].
                             Refer to 'Shortcode' tab to add customizations to Shortcode.
                         </div>
-                        <hr>
                         <h4 style="display: none"><a  id="openid_question3"  >How can I redirect to my blog page after login?</a></h4>
                         <div style="display: none" id="openid_question3_desc">
                             You can select one of the options from <b>Redirect URL after login</b> of <b>Display Option</b> section under <b>Wordpress Config</b> tab. <br>
@@ -866,14 +865,7 @@ function oxd_openid_troubleshoot_info(){ ?>
                         You can use request attributes to customize the icons. All attributes are optional.<br>
                         <b>Example:</b> <code>[gluu_login  shape="<?php echo get_option('oxd_openid_login_theme');?>" theme="<?php echo get_option('oxd_openid_login_custom_theme');?>" space="<?php echo get_option('oxd_login_icon_space')?>" size="<?php echo get_option('oxd_login_icon_custom_size')?>"]</code><br>
 
-                    </div>
-                    <hr>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <h3><a id="openid_shortcode_inphp_title">Shortcode in php file</a></h3>
-                    <div hidden="" id = "openid_shortcode_inphp" style="font-size:13px !important">
+                        <br/>
                         You can use a shortcode in a PHP file like this: &nbsp;&nbsp;
                         &nbsp;
                         <code>&lt;&#63;php echo do_shortcode(‘SHORTCODE’) /&#63;&gt;</code>
