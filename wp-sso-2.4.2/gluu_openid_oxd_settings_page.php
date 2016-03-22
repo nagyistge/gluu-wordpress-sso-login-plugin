@@ -615,7 +615,7 @@ function oxd_openid_login_config_info(){
                                 </div>
                             </td>
                         </tr>
-                        <tr>
+                        <tr style="display: none">
                             <th scope="row">
                                 Add scopes
                             </th>

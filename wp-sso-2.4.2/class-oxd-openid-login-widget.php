@@ -13,7 +13,7 @@ if(is_oxd_registered()) {
 		public function __construct() {
 			parent::__construct(
 					'oxd_openid_login_wid',
-					'Gluu SSO Widget',
+					'Gluu SSO 2.4.2 Widget',
 					array( 'description' => __( 'Login using Social Apps and Gluu Apps .', 'flw' ), )
 			);
 		}

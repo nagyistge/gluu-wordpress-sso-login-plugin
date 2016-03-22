@@ -515,7 +515,7 @@ class gluu_OpenID_OXD {
 	}
 
 	function gluu_openid_menu() {
-		$page = add_menu_page( 'Gluu OpenID Settings ' . __( 'Configure OpenID', 'oxd_openid_settings' ), 'Gluu SSO', 'administrator',
+		$page = add_menu_page( 'Gluu OpenID Settings ' . __( 'Configure OpenID', 'oxd_openid_settings' ), 'Gluu SSO 2.4.2', 'administrator',
 				'oxd_openid_settings', array( $this, 'oxd_login_widget_openid_options' ),plugin_dir_url(__FILE__) . 'includes/images/gluu_icon.png');
 	}
 
