@@ -13,11 +13,13 @@
                         <a href="https://github.com/GluuFederation/gluu-wordpress-sso-login-plugin/blob/master/gluu_sso.zip">Download extension and install.</a><br/>
                 <div class="page group">
                    <img src="https://github.com/GluuFederation/gluu-wordpress-sso-login-plugin/blob/master/plugin.jpg">
-                   <img src="https://github.com/GluuFederation/gluu-wordpress-sso-login-plugin/blob/master/docu/1.png">
-                   <img src="https://github.com/GluuFederation/gluu-wordpress-sso-login-plugin/blob/master/docu/2.png">
-                   <img src="https://github.com/GluuFederation/gluu-wordpress-sso-login-plugin/blob/master/docu/3.png">
-                   <img src="https://github.com/GluuFederation/gluu-wordpress-sso-login-plugin/blob/master/docu/4.png">
-                   <img src="https://github.com/GluuFederation/gluu-wordpress-sso-login-plugin/blob/master/docu/5.png">
+                   <img src="https://raw.githubusercontent.com/GluuFederation/gluu-wordpress-sso-login-plugin/master/wp-sso-2.4.2/docu/1.png">
+                   <img src="https://raw.githubusercontent.com/GluuFederation/gluu-wordpress-sso-login-plugin/master/wp-sso-2.4.2/docu/2.png">
+                   <img src="https://raw.githubusercontent.com/GluuFederation/gluu-wordpress-sso-login-plugin/master/wp-sso-2.4.2/docu/3.png">
+                   <img src="https://raw.githubusercontent.com/GluuFederation/gluu-wordpress-sso-login-plugin/master/wp-sso-2.4.2/docu/4.png">
+                   <img src="https://raw.githubusercontent.com/GluuFederation/gluu-wordpress-sso-login-plugin/master/wp-sso-2.4.2/docu/5.png">
+                   <img src="https://raw.githubusercontent.com/GluuFederation/gluu-wordpress-sso-login-plugin/master/wp-sso-2.4.2/docu/6.png">
+                   <img src="https://raw.githubusercontent.com/GluuFederation/gluu-wordpress-sso-login-plugin/master/wp-sso-2.4.2/docu/7.png">
                    <table width="100%">
                    		<tbody>
                    			<tr>
