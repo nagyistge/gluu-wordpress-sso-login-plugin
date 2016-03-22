@@ -71,7 +71,7 @@ class gluu_OpenID_OXD {
 		add_option('oxd_openid_register_disabled_message', 'Registration is disabled for this website. Please contact the administrator for any queries.' );
 		add_option('oxdOpenId_gluu_login_avatar','1');
 		add_option('oxdOpenId_user_attributes','0');
-		add_option('oxd_openid_scops',array("openid","profile","email"));
+		add_option('oxd_openid_scops',array("openid", "profile","email","address", "clientinfo", "mobile_phone", "phone"));
 		$custom_scripts = array(
 				array('name'=>'Google','image'=>plugins_url( 'includes/images/icons/google.png', __FILE__ ),'value'=>'gplus'),
 				array('name'=>'Basic','image'=>plugins_url( 'includes/images/icons/basic.png', __FILE__ ),'value'=>'basic'),
@@ -120,7 +120,7 @@ class gluu_OpenID_OXD {
 				"oxd_host_port" =>8099,
 				"authorization_redirect_uri" => site_url().'/wp-login.php?option=oxdOpenId',
 				"logout_redirect_uri" => site_url().'/index.php?option=allLogout',
-				"scope" => [ "openid", "profile","email"],
+				"scope" => [ "openid", "profile","email","address", "clientinfo", "mobile_phone", "phone"],
 				"application_type" => "web",
 				"redirect_uris" => [ site_url().'/wp-login.php?option=oxdOpenId' ],
 				"response_types" => ["code"],
@@ -151,7 +151,7 @@ class gluu_OpenID_OXD {
 		add_option('oxd_openid_register_disabled_message', 'Registration is disabled for this website. Please contact the administrator for any queries.' );
 		add_option('oxdOpenId_gluu_login_avatar','1');
 		add_option('oxdOpenId_user_attributes','0');
-		add_option('oxd_openid_scops',array('openid','profile','email'));
+		add_option('oxd_openid_scops',array("openid", "profile","email","address", "clientinfo", "mobile_phone", "phone"));
 		$custom_scripts = array(
 				array('name'=>'Google','image'=>plugins_url( 'includes/images/icons/google.png', __FILE__ ),'value'=>'gplus'),
 				array('name'=>'Basic','image'=>plugins_url( 'includes/images/icons/basic.png', __FILE__ ),'value'=>'basic'),
@@ -334,7 +334,7 @@ class gluu_OpenID_OXD {
 					"oxd_host_port" =>$oxd_host_port,
 					"authorization_redirect_uri" => site_url().'/wp-login.php?option=oxdOpenId',
 					"logout_redirect_uri" => site_url().'/index.php?option=allLogout',
-					"scope" => [ "openid", "profile","email"],
+					"scope" => [ "openid", "profile","email","address", "clientinfo", "mobile_phone", "phone"],
 					"application_type" => "web",
 					"redirect_uris" => [ site_url().'/wp-login.php?option=oxdOpenId' ],
 					"response_types" => ["code"],
