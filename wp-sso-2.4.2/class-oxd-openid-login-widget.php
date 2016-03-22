@@ -220,40 +220,72 @@ if(is_oxd_registered()) {
 	}
 
 	function oxd_openid_end_session() {
+		session_start();
+
 		$config_option = get_option( 'oxd_config' );
-		if(get_option('oxd_id') && $_COOKIE['user_oxd_id_token']){
-			if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-				if(exec('netstat -aon |find/i "listening" |find "'.$config_option['oxd_host_port'].'"')){
-					$logout = new Logout();
-					$logout->setRequestOxdId(get_option('oxd_id'));
-					$logout->setRequestIdToken($_COOKIE['user_oxd_id_token']);
-					$logout->setRequestPostLogoutRedirectUri($config_option['logout_redirect_uri']);
-					$logout->setRequestSessionState($_COOKIE['session_states']);
-					$logout->setRequestState($_COOKIE['states']);
-					$logout->request();
-					unset($_COOKIE['user_oxd_access_token']);
-					unset($_COOKIE['user_oxd_id_token']);
-					unset($_COOKIE['session_states']);
-					unset($_COOKIE['states']);
-					wp_redirect( $logout->getResponseObject()->data->uri );
-					exit;
+		if(!empty($_SESSION['user_oxd_id_token'])){
+			if(get_option('oxd_id') && $_SESSION['user_oxd_id_token']){
+				if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+					if(exec('netstat -aon |find/i "listening" |find "'.$config_option['oxd_host_port'].'"')){
+						$logout = new Logout();
+						$logout->setRequestOxdId(get_option('oxd_id'));
+						$logout->setRequestIdToken($_COOKIE['user_oxd_id_token']);
+						$logout->setRequestPostLogoutRedirectUri($config_option['logout_redirect_uri']);
+						$logout->setRequestSessionState($_COOKIE['session_states']);
+						$logout->setRequestState($_COOKIE['states']);
+						$logout->request();
+						echo '<script>
+						var delete_cookie = function(name) {
+							document.cookie = name + \'=;expires=Thu, 01 Jan 1970 00:00:01 GMT;\';
+						};
+						delete_cookie(\'user_oxd_access_token\');
+						delete_cookie(\'user_oxd_id_token\');
+						delete_cookie(\'session_states\');
+						delete_cookie(\'states\');
+					</script>';
+						unset($_SESSION['user_oxd_access_token']);
+						unset($_SESSION['user_oxd_id_token']);
+						unset($_SESSION['session_states']);
+						unset($_SESSION['states']);
+
+						unset($_COOKIE['user_oxd_access_token']);
+						unset($_COOKIE['user_oxd_id_token']);
+						unset($_COOKIE['session_states']);
+						unset($_COOKIE['states']);
+						wp_redirect( $logout->getResponseObject()->data->uri );
+						exit;
+					}
+				} else {
+					if(exec('netstat -tulpn | grep :'.$config_option['oxd_host_port'])){
+						$logout = new Logout();
+						$logout->setRequestOxdId(get_option('oxd_id'));
+						$logout->setRequestIdToken($_COOKIE['user_oxd_id_token']);
+						$logout->setRequestPostLogoutRedirectUri($config_option['logout_redirect_uri']);
+						$logout->setRequestSessionState($_COOKIE['session_states']);
+						$logout->setRequestState($_COOKIE['states']);
+						$logout->request();
+						echo '<script>
+						var delete_cookie = function(name) {
+							document.cookie = name + \'=;expires=Thu, 01 Jan 1970 00:00:01 GMT;\';
+						};
+						delete_cookie(\'user_oxd_access_token\');
+						delete_cookie(\'user_oxd_id_token\');
+						delete_cookie(\'session_states\');
+						delete_cookie(\'states\');
+					</script>';
+						unset($_SESSION['user_oxd_access_token']);
+						unset($_SESSION['user_oxd_id_token']);
+						unset($_SESSION['session_states']);
+						unset($_SESSION['states']);
+						unset($_COOKIE['user_oxd_access_token']);
+						unset($_COOKIE['user_oxd_id_token']);
+						unset($_COOKIE['session_states']);
+						unset($_COOKIE['states']);
+						wp_redirect( $logout->getResponseObject()->data->uri );
+						exit;
+					}
 				}
-			} else {
-				if(exec('netstat -tulpn | grep :'.$config_option['oxd_host_port'])){
-					$logout = new Logout();
-					$logout->setRequestOxdId(get_option('oxd_id'));
-					$logout->setRequestIdToken($_COOKIE['user_oxd_id_token']);
-					$logout->setRequestPostLogoutRedirectUri($config_option['logout_redirect_uri']);
-					$logout->setRequestSessionState($_COOKIE['session_states']);
-					$logout->setRequestState($_COOKIE['states']);
-					$logout->request();
-					unset($_COOKIE['user_oxd_access_token']);
-					unset($_COOKIE['user_oxd_id_token']);
-					unset($_COOKIE['session_states']);
-					unset($_COOKIE['states']);
-					wp_redirect( $logout->getResponseObject()->data->uri );
-					exit;
-				}
+
 			}
 
 		}
@@ -308,6 +340,7 @@ if(is_oxd_registered()) {
 			exit;
 		}
 		if(isset( $_REQUEST['option'] ) and strpos( $_REQUEST['option'], 'oxdOpenId' ) !== false ){
+			session_start();
 			$http = isset($_SERVER['HTTPS']) && !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? "https://" : "http://";
 			$parts = parse_url($http . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"]);
 			parse_str($parts['query'], $query);
@@ -320,6 +353,10 @@ if(is_oxd_registered()) {
 			$get_tokens_by_code->setRequestScopes($config_option["scope"]);
 			$get_tokens_by_code->request();
 			$get_tokens_by_code_array = $get_tokens_by_code->getResponseObject()->data->id_token_claims;
+			$_SESSION['user_oxd_id_token']= $get_tokens_by_code->getResponseIdToken();
+			$_SESSION['user_oxd_access_token']= $get_tokens_by_code->getResponseAccessToken();
+			$_SESSION['session_states']= $_REQUEST['session_state'];
+			$_SESSION['states']= $_REQUEST['state'];
 			setcookie( 'user_oxd_id_token', $get_tokens_by_code->getResponseIdToken(), time()+3600*24*100, COOKIEPATH, COOKIE_DOMAIN, false);
 			setcookie( 'user_oxd_access_token', $get_tokens_by_code->getResponseAccessToken(), time()+3600*24*100, COOKIEPATH, COOKIE_DOMAIN, false);
 			setcookie( 'session_states', $_REQUEST['session_state'], time()+3600*24*100, COOKIEPATH, COOKIE_DOMAIN, false);

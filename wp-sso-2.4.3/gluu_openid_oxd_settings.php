@@ -1,10 +1,10 @@
 <?php
 
 /**
- * Plugin Name: Gluu SSO
+ * Plugin Name: Gluu SSO 2.4.3
  * Plugin URI: https://gluu.org
  * Description: Use OpenID Connect to login by leveraging the oxd client service demon.
- * Version: 2.4.2
+ * Version: 2.4.3
  * Author: Vlad Karapetyan
  * Author URI: https://gluu.org
  * License: MIT
