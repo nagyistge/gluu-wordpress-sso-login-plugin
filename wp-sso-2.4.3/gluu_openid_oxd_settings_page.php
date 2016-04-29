@@ -828,7 +828,83 @@ function oxd_openid_troubleshoot_info(){ ?>
 
         <table width="100%">
             <tbody>
-
+            <tr>
+                <td>
+                    <h1><a id="Wordpress_GLUU_SSO_plugin_0"></a>Wordpress GLUU SSO plugin</h1>
+                    <p><img src="https://raw.githubusercontent.com/GluuFederation/gluu-wordpress-oxd-login-plugin/master/plugin.jpg" alt="image"></p>
+                    <p>Wordpress-GLUU-SSO plugin gives access for login to your Wordpress site, with the help of GLUU server.</p>
+                    <p>There are already 2 versions of Wordpress-GLUU-SSO (2.4.2 and 2.4.3) plugins, each in its turn is working with oxD and GLUU servers.
+                        For example if you are using Wordpress-gluu-sso-2.4.3 plugin, you need to connect with oxD-server-2.4.3.</p>
+                    <p>Now I want to explain in details how to use plugin step by step.</p>
+                    <p>Plugin will not be working if your host does not have https://.</p>
+                    <h2><a id="Step_1_Install_Gluuserver_13"></a>Step 1. Install Gluu-server</h2>
+                    <p>(version 2.4.2 or 2.4.3)</p>
+                    <p>If you want to use external gluu server, You can not do this step.</p>
+                    <p><a target="_blank" href="https://www.gluu.org/docs/deployment/">Gluu-server installation gide</a>.</p>
+                    <h2><a id="Step_2_Download_oxDserver_21"></a>Step 2. Download oxD-server</h2>
+                    <p><a target="_blank" href="https://ox.gluu.org/maven/org/xdi/oxd-server/2.4.3.Final/oxd-server-2.4.3.Final-distribution.zip">Download oxD-server-2.4.3.Final</a>.</p>
+                    <h2><a id="Step_3_Unzip_and_run_oXDserver_31"></a>Step 3. Unzip and run oXD-server</h2>
+                    <ol>
+                        <li>Unzip your oxD-server.</li>
+                        <li>Open the command line and navigate to the extracted folder in the conf directory.</li>
+                        <li>Open oxd-conf.json file.</li>
+                        <li>If your server is using 8099 port, please change “port” number to free port, which is not used.</li>
+                        <li>Set parameter “op_host”:“Your gluu-server-url (internal or external)”</li>
+                        <li>Open the command line and navigate to the extracted folder in the bin directory.</li>
+                        <li>For Linux environment, run sh <a href="http://oxd-start.sh">oxd-start.sh</a>&amp;.</li>
+                        <li>For Windows environment, run oxd-start.bat.</li>
+                        <li>After the server starts, go to Step 4.</li>
+                    </ol>
+                    <h2><a id="Step_6_General_73"></a>Step 4. General</h2>
+                    <p><img src="https://raw.githubusercontent.com/GluuFederation/gluu-wordpress-oxd-login-plugin/master/wp-sso-2.4.2/docu/1.png" alt="General"></p>
+                    <ol>
+                        <li>Admin Email: please add your or admin email address for registrating site in Gluu server.</li>
+                        <li>Port number: choose that port which is using oxd-server (see in oxd-server/conf/oxd-conf.json file).</li>
+                        <li>Click <code>Next</code> to continue.</li>
+                    </ol>
+                    <p>If You are successfully registered in gluu server, you will see bottom page.</p>
+                    <p><img src="https://raw.githubusercontent.com/GluuFederation/gluu-wordpress-oxd-login-plugin/master/wp-sso-2.4.2/docu/2.png" alt="oxD_id"></p>
+                    <p>For making sure go to your gluu server / OpenID Connect / Clients and search for your oxD ID</p>
+                    <p>If you want to reset configurations click on Reset configurations button.</p>
+                    <h2><a id="Step_8_OpenID_Connect_Configuration_89"></a>Step 5. OpenID Connect Configuration</h2>
+                    <p>OpenID Connect Configuration page for Wordpress-gluu-sso 2.4.3.</p>
+                    <h3><a id="Scopes_93"></a>Scopes.</h3>
+                    <p>You can look all scopes in your gluu server / OpenID Connect / Scopes and understand the meaning of  every scope.
+                        Scopes are need for getting loged in users information from gluu server.
+                        Pay attention to that, which scopes you are using that are switched on in your gluu server.</p>
+                    <p>In Wordpress-gluu-sso 2.4.3  you can only enable, disable and delete scope.
+                        <img src="https://raw.githubusercontent.com/GluuFederation/gluu-wordpress-oxd-login-plugin/master/wp-sso-2.4.2/docu/4.png" alt="Scopes1"></p>
+                    <h3><a id="Custom_scripts_104"></a>Custom scripts.</h3>
+                    <p><img src="https://raw.githubusercontent.com/GluuFederation/gluu-wordpress-oxd-login-plugin/master/wp-sso-2.4.2/docu/5.png" alt="Customscripts"></p>
+                    <p>You can look all custom scripts in your gluu server / Configuration / Manage Custom Scripts / and enable login type, which type you want.
+                        Custom Script represent itself the type of login, at this moment gluu server supports (U2F, Duo, Google +, Basic) types.</p>
+                    <h3><a id="Pay_attention_to_that_111"></a>Pay attention to that.</h3>
+                    <ol>
+                        <li>Which custom script you enable in your Wordpress site in order it must be switched on in gluu server too.</li>
+                        <li>Which custom script you will be enable in OpenID Connect Configuration page, after saving that will be showed in Wordpress Configuration page too.</li>
+                        <li>When you create new custom script, both fields are required.</li>
+                    </ol>
+                    <h2><a id="Step_9_Wordpress_Configuration_117"></a>Step 6. Wordpress Configuration</h2>
+                    <h3><a id="Customize_Login_Icons_1194"></a>Customize Login Icons</h3>
+                    <p>Pay attention to that, if custom scripts are not enabled, nothing will be showed.
+                        Customize shape, space between icons and size of the login icons.</p>
+                    <h3><a id="Customize_Login_Icons_119"></a>Display Options</h3>
+                    <ul>
+                        <ol> If you enable Default Login Form,than login icons will be showed in wordpress Default Login page .</ol>
+                        <ol> If you enable Default Registration Form,than login icons will be showed in wordpress Default Registration page .</ol>
+                        <ol> If you enable Comment Form,than login icons will be showed near wordpress Comment Form.</ol>
+                        <ol> If you enable WooCommerce Login Form,than login icons will be showed in wordpress WooCommerce Login page.</ol>
+                    </ul>
+                    <p><img src="https://raw.githubusercontent.com/GluuFederation/gluu-wordpress-oxd-login-plugin/master/wp-sso-2.4.2/docu/6.png" alt="WordpressConfiguration"></p>
+                    <h2><a id="Step_10_Show_icons_in_frontend_1288"></a>Step 7. Gluu SSO Widget</h2>
+                    <p>
+                        You can use plugin also as widget.
+                        In your widget page find Gluu SSO Widget and use.
+                    </p>
+                    <h2><a id="Step_10_Show_icons_in_frontend_126"></a>Step 8. Show icons in frontend</h2>
+                    <p><img src="https://raw.githubusercontent.com/GluuFederation/gluu-wordpress-oxd-login-plugin/master/wp-sso-2.4.2/docu/7.png" alt="frontend"></p>
+                </td>
+            </tr>
             <tr>
                 <td>
                     <h3><a  id="openid_question_login" class="oxd_openid_title_panel" >Gluu SSO</a></h3>
@@ -901,7 +977,6 @@ function oxd_openid_troubleshoot_info(){ ?>
             </tr>
             </tbody>
         </table>
-        <h3 style="border: 1px solid green" align="center"><img width="100%" src="<?php echo plugins_url('plugin.jpg', __FILE__);?>"></h3>
     </div>
     <?php
 }
