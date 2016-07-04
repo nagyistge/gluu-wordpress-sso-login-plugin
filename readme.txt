@@ -3,7 +3,7 @@ Contributors: dollar007, nynymike, willow9886, yuriyz, yurem, tecoholic, ganesh-
 Tags: shortcodes, widgets, social login, google+, u2f token, fido, duo, gluu basic login
 Requires at least: 4.3
 Tested up to: 4.5
-Stable tag: 2.4.2
+Stable tag: 2.4.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -27,7 +27,7 @@ Plugin will not be working if your host does not have https://.
 
 = Step 1. Install Gluu-server =
 
-(version 2.4.2)
+(version 2.4.3)
 
 If you want to use external gluu server, You can not do this step.
 
@@ -35,7 +35,7 @@ If you want to use external gluu server, You can not do this step.
 
 = Step 2. Download oxD-server =
 
-[Download oXD-server-2.4.2.Final](https://ox.gluu.org/maven/org/xdi/oxd-server/2.4.2.Final/oxd-server-2.4.2.Final-distribution.zip).
+[Download oXD-server-2.4.3.Final](https://ox.gluu.org/maven/org/xdi/oxd-server/2.4.3.Final/oxd-server-2.4.3.Final-distribution.zip).
 
 = Step 3. Unzip and run oXD-server =
 
@@ -51,7 +51,7 @@ If you want to use external gluu server, You can not do this step.
 
 = Step 4. Plugin configuration =
 
-Now in your admin menu panel you can see Gluu SSO {2.4.2 menu} tab, click on it.
+Now in your admin menu panel you can see Gluu SSO {2.4.3 menu} tab, click on it.
 
 = Step 5. General =
 

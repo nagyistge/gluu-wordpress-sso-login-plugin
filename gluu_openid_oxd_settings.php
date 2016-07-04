@@ -1,10 +1,10 @@
 <?php
 
 /**
- * Plugin Name: Gluu SSO 2.4.2
+ * Plugin Name: Gluu SSO 2.4.3
  * Plugin URI: https://gluu.org
  * Description: Use OpenID Connect to login by leveraging the oxd client service demon.
- * Version: 2.4.2
+ * Version: 2.4.3
  * Author: Vlad Karapetyan
  * Author URI: https://gluu.org
  * License: MIT
@@ -13,6 +13,7 @@
 require('gluu_openid_oxd_settings_page.php');
 include_once dirname( __FILE__ ) . '/class-oxd-openid-login-widget.php';
 include_once dirname( __FILE__ ) . '/oxd-rp/Register_site.php';
+include_once dirname( __FILE__ ) . '/oxd-rp/Update_site_registration.php';
 class gluu_OpenID_OXD {
 
 	function __construct() {
@@ -459,6 +460,37 @@ class gluu_OpenID_OXD {
 					update_option( 'oxd_openid_message',$error_message);
 					$this->oxd_openid_show_error_message();
 				}else{
+					$config_option = get_option( 'oxd_config');
+					$update_site_registration = new Update_site_registration();
+					$update_site_registration->setRequestOxdId(get_option('oxd_id'));
+					$update_site_registration->setRequestAcrValues($config_option['acr_values']);
+					$update_site_registration->setRequestAuthorizationRedirectUri($config_option['authorization_redirect_uri']);
+					$update_site_registration->setRequestRedirectUris($config_option['redirect_uris']);
+					$update_site_registration->setRequestGrantTypes($config_option['grant_types']);
+					$update_site_registration->setRequestResponseTypes(['code']);
+					$update_site_registration->setRequestLogoutRedirectUri($config_option['logout_redirect_uri']);
+					$update_site_registration->setRequestContacts([get_option( 'oxd_openid_admin_email')]);
+					$update_site_registration->setRequestApplicationType('web');
+					$update_site_registration->setRequestClientLogoutUri($config_option['logout_redirect_uri']);
+					$update_site_registration->setRequestScope($config_option['scope']);
+					$status = $update_site_registration->request();
+					if(!$status['status']){
+						update_option( 'oxd_openid_message', $status['message']);
+						$this->oxd_openid_show_error_message();
+						return;
+					}
+					if($update_site_registration->getResponseOxdId()){
+						if(get_option('oxd_id')){
+							update_option( 'oxd_id', $update_site_registration->getResponseOxdId() );
+						}else{
+							add_option( 'oxd_id', $update_site_registration->getResponseOxdId() );
+						}
+						$this->oxd_openid_show_success_message();
+					}else{
+						update_option( 'oxd_openid_message', 'Gluu server url, oxd ip or oxd host is not a valid.');
+						$this->oxd_openid_show_error_message();
+					}
+					update_option( 'oxd_id', $update_site_registration->getResponseOxdId() );
 					update_option( 'oxd_openid_message', 'Your settings are saved successfully.' );
 					$this->oxd_openid_show_success_message();
 				}
@@ -515,7 +547,7 @@ class gluu_OpenID_OXD {
 	}
 
 	function gluu_openid_menu() {
-		$page = add_menu_page( 'Gluu OpenID Settings ' . __( 'Configure OpenID', 'oxd_openid_settings' ), 'Gluu SSO 2.4.2', 'administrator',
+		$page = add_menu_page( 'Gluu OpenID Settings ' . __( 'Configure OpenID', 'oxd_openid_settings' ), 'Gluu SSO 2.4.3', 'administrator',
 				'oxd_openid_settings', array( $this, 'oxd_login_widget_openid_options' ),plugin_dir_url(__FILE__) . 'includes/images/gluu_icon.png');
 	}
 

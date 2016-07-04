@@ -615,7 +615,7 @@ function oxd_openid_login_config_info(){
                                 </div>
                             </td>
                         </tr>
-                        <tr style="display: none">
+                        <tr>
                             <th scope="row">
                                 Add scopes
                             </th>
@@ -674,6 +674,8 @@ function oxd_openid_login_config_info(){
                             ?>
                             <td>
                                 <div style="margin-right: 30px">
+
+
                                     <h3>Manage Authentication</h3>
 
                                         <span>An OpenID Connect Provider (OP) like the Gluu Server may provide many different work flows for
@@ -823,6 +825,7 @@ function oxd_openid_troubleshoot_info(){ ?>
                 Please enter OXD configuration to continue.
             </div>
         <?php } ?>
+
         <table width="100%">
             <tbody>
             <tr>
@@ -831,7 +834,7 @@ function oxd_openid_troubleshoot_info(){ ?>
                     <p><img src="https://raw.githubusercontent.com/GluuFederation/gluu-wordpress-oxd-login-plugin/master/plugin.jpg" alt="image"></p>
                     <p>Wordpress-GLUU-SSO plugin gives access for login to your Wordpress site, with the help of GLUU server.</p>
                     <p>There are already 2 versions of Wordpress-GLUU-SSO (2.4.2 and 2.4.3) plugins, each in its turn is working with oxD and GLUU servers.
-                        For example if you are using Wordpress-gluu-sso-2.4.2 plugin, you need to connect with oxD-server-2.4.2.</p>
+                        For example if you are using Wordpress-gluu-sso-2.4.3 plugin, you need to connect with oxD-server-2.4.3.</p>
                     <p>Now I want to explain in details how to use plugin step by step.</p>
                     <p>Plugin will not be working if your host does not have https://.</p>
                     <h2><a id="Step_1_Install_Gluuserver_13"></a>Step 1. Install Gluu-server</h2>
@@ -839,7 +842,7 @@ function oxd_openid_troubleshoot_info(){ ?>
                     <p>If you want to use external gluu server, You can not do this step.</p>
                     <p><a target="_blank" href="https://www.gluu.org/docs/deployment/">Gluu-server installation gide</a>.</p>
                     <h2><a id="Step_2_Download_oxDserver_21"></a>Step 2. Download oxD-server</h2>
-                    <p><a target="_blank" href="https://ox.gluu.org/maven/org/xdi/oxd-server/2.4.2.Final/oxd-server-2.4.2.Final-distribution.zip">Download oxD-server-2.4.2.Final</a>.</p>
+                    <p><a target="_blank" href="https://ox.gluu.org/maven/org/xdi/oxd-server/2.4.3.Final/oxd-server-2.4.3.Final-distribution.zip">Download oxD-server-2.4.3.Final</a>.</p>
                     <h2><a id="Step_3_Unzip_and_run_oXDserver_31"></a>Step 3. Unzip and run oXD-server</h2>
                     <ol>
                         <li>Unzip your oxD-server.</li>
@@ -864,13 +867,13 @@ function oxd_openid_troubleshoot_info(){ ?>
                     <p>For making sure go to your gluu server / OpenID Connect / Clients and search for your oxD ID</p>
                     <p>If you want to reset configurations click on Reset configurations button.</p>
                     <h2><a id="Step_8_OpenID_Connect_Configuration_89"></a>Step 5. OpenID Connect Configuration</h2>
-                    <p>OpenID Connect Configuration page for Wordpress-gluu-sso 2.4.2.</p>
+                    <p>OpenID Connect Configuration page for Wordpress-gluu-sso 2.4.3.</p>
                     <h3><a id="Scopes_93"></a>Scopes.</h3>
                     <p>You can look all scopes in your gluu server / OpenID Connect / Scopes and understand the meaning of  every scope.
                         Scopes are need for getting loged in users information from gluu server.
                         Pay attention to that, which scopes you are using that are switched on in your gluu server.</p>
-                    <p>In Wordpress-gluu-sso 2.4.2  you can only enable, disable and delete scope.
-                        <img src="https://raw.githubusercontent.com/GluuFederation/gluu-wordpress-oxd-login-plugin/master/wp-sso-2.4.2/docu/3.png" alt="Scopes1"></p>
+                    <p>In Wordpress-gluu-sso 2.4.3  you can add, enable, disable and delete scope.
+                        <img src="https://raw.githubusercontent.com/GluuFederation/gluu-wordpress-oxd-login-plugin/master/wp-sso-2.4.2/docu/4.png" alt="Scopes1"></p>
                     <h3><a id="Custom_scripts_104"></a>Custom scripts.</h3>
                     <p><img src="https://raw.githubusercontent.com/GluuFederation/gluu-wordpress-oxd-login-plugin/master/wp-sso-2.4.2/docu/5.png" alt="Customscripts"></p>
                     <p>You can look all custom scripts in your gluu server / Configuration / Manage Custom Scripts / and enable login type, which type you want.
