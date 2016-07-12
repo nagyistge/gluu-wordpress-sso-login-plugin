@@ -1,4 +1,4 @@
-=== Gluu SSO (v 2.4.2) ===
+=== Gluu SSO (v 2.4.3) ===
 Contributors: dollar007, nynymike, willow9886, yuriyz, yurem, tecoholic, ganesh-at-wiw
 Tags: shortcodes, widgets, social login, google+, u2f token, fido, duo, gluu basic login
 Requires at least: 4.3
