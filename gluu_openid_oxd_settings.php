@@ -7,7 +7,7 @@
  * Version: 2.4.3
  * Author: Vlad Karapetyan
  * Author URI: https://gluu.org
- * License: MIT
+ * License: GPL2
  */
 
 require('gluu_openid_oxd_settings_page.php');
