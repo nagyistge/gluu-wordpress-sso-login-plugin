@@ -1,4 +1,9 @@
 <?php
+
+	// If uninstall is not called from WordPress, exit
+	if ( !defined( 'WP_UNINSTALL_PLUGIN' ) ) {
+		exit();
+	}
 	//delete all stored key-value pairs
 	delete_option('oxd_config');
 	delete_option('oxd_id');
